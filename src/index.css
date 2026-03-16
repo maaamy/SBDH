@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    
+    .titleText {
+    @apply text-title font-global font-bold tracking-tight;
+  }
+  
+    .secondaryTitleText {
+    @apply text-secondaryTitle font-global font-bold tracking-tight;
+  }
+
+    .productTitle {
+    @apply text-product font-global font-bold tracking-tight;
+  }
+
+    .buttonText {
+    @apply text-button font-global font-bold tracking-tight;
+  }
+
+    .normalText {
+    @apply text-normal font-global tracking-tight;
+  }
+
+    .secondaryText {
+    @apply text-normal font-global italic tracking-tight;
+  }
+  
+}
