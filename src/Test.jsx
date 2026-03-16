@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
 
-function App() {
+function Test() {
   const [data, setData] = useState([])
   useEffect(() => {
   getData()
@@ -34,4 +30,4 @@ async function getData() {
   
 }
 
-export default App
+export default Test
