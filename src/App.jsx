@@ -1,14 +1,8 @@
-import './App.css'
-import PageAccueil from './pages/PageAccueil.jsx'
-import Test from './Test.jsx'
+import ConnexionClient from "./pages/ConnexionClient";
+import ConnexionEntreprise from "./pages/ConnexionEntreprise";
+
 function App() {
- 
- return (
-    <div>
-      <h1>Hello</h1>
-      <PageAccueil />
-    </div>
-  )
+  return <ConnexionEntreprise />;
 }
 
-export default App
+export default App;

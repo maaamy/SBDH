@@ -1,0 +1,17 @@
+:root {
+  color: #1f1109;
+  font-family: 'Work Sans', 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-image: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 241, 232, 0.85)), url('./assets/BackCon-removebg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+}
