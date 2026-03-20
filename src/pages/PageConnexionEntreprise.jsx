@@ -91,7 +91,7 @@ const PageConnexionEntreprise = () => {
               </label>
               <button
                 type="button"
-                onClick={() => navigate("/reinitialisation")}
+                onClick={() => navigate("/reinitialisation/email")}
                 className="normalText font-bold text-black hover:underline"
               >
                 Mot de passe oublié ?
