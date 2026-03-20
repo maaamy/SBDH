@@ -5,8 +5,8 @@ import PageConnexion from './pages/PageConnexion.jsx'
 import PageInscription from './pages/PageInscription.jsx'
 import PageInscriptionClient from './pages/PageInscriptionClient.jsx'
 import PageInscriptionEntreprise from './pages/PageInscriptionEntreprise.jsx'
-import ConnexionClient from "./pages/ConnexionClient";
-import ConnexionEntreprise from "./pages/ConnexionEntreprise";
+import PageConnexionClient from "./pages/PageConnexionClient.jsx";
+import PageConnexionEntreprise from "./pages/PageConnexionEntreprise.jsx";
 
 function App() {
 
@@ -14,8 +14,8 @@ function App() {
     <Routes>
       <Route path="/" element={<PageAccueil />}/>
       <Route path="/connexion" element={<PageConnexion />}/>
-      <Route path="/connexion/client" element={<ConnexionClient />}/>
-      <Route path="/connexion/entreprise" element={<ConnexionEntreprise />}/>
+      <Route path="/connexion/client" element={<PageConnexionClient />}/>
+      <Route path="/connexion/entreprise" element={<PageConnexionEntreprise />}/>
       <Route path="/inscription" element={<PageInscription />}/>
       <Route path="/inscription/client" element={<PageInscriptionClient />}/>
       <Route path="/inscription/entreprise" element={<PageInscriptionEntreprise />}/>
