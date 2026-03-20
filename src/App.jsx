@@ -1,13 +1,16 @@
+import { Routes, Route } from 'react-router-dom'
 import './App.css'
 import PageAccueil from './pages/PageAccueil.jsx'
-import Test from './Test.jsx'
+import PageConnexion from './pages/PageConnexion.jsx'
+import PageInscription from './pages/PageInscription.jsx'
 function App() {
  
  return (
-    <div>
-      <h1>Hello</h1>
-      <PageAccueil />
-    </div>
+    <Routes>
+      <Route path="/" element={<PageAccueil />}/>
+      <Route path="/connexion" element={<PageConnexion />}/>
+      <Route path="/inscription" element={<PageInscription />}/>
+    </Routes>
   )
 }
 

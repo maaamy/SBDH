@@ -18,7 +18,7 @@ const  FilterSection = ({ title, children, defaultOpen = false }) => {
         </span>
       
         <ChevronRight
-          className={`text-button transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+          className={`text-color-button transition-transform duration-200 ${open ? "rotate-90" : ""}`}
           size={20}
         />
 
