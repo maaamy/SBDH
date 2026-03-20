@@ -5,13 +5,20 @@ import Sidebar from "../components/layout/Sidebar";
 import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
 
+const NAV_LIST = [
+  { label: "Accueil", path: "/" },
+  { label: "A propos", path: "#" },
+  { label: "S'inscrire", path: "/inscription" },
+  { label: "Se connecter", path: "/connexion" },
+];
+
 const PageAccueil = () => {
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg ">
+    <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
       
       <Banner />
 
-      <Navigation navList={["Accueil", "A propos", "S'inscrire", "Se connecter"]} />
+      <Navigation navList={NAV_LIST} />
      
 
       <main className="flex items-start gap-0 p-4 w-full flex-1">

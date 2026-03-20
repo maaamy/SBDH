@@ -48,7 +48,7 @@ const Sidebar = ({ companyList, categoryList}) => {
                 type="number"
                 value={min}
                 onChange={(e) => setMin(e.target.value)}
-                className="w-20 h-7 bg-white px-2 normalText border-none focus:outline-none focus:ring-1 focus:ring-button"
+                className="w-20 h-7 bg-white px-2 normalText border-none focus:outline-none focus:ring-1 focus:ring-color-button"
               />
             </div>
 
@@ -58,7 +58,7 @@ const Sidebar = ({ companyList, categoryList}) => {
                 type="number"
                 value={max}
                 onChange={(e) => setMax(e.target.value)}
-                className="w-20 h-7 bg-white px-2 normalText border-none focus:outline-none focus:ring-1 focus:ring-button"
+                className="w-20 h-7 bg-white px-2 normalText border-none focus:outline-none focus:ring-1 focus:ring-color-button"
               />
             </div>
 
@@ -84,7 +84,7 @@ const Sidebar = ({ companyList, categoryList}) => {
             Annuler
           </button>
 
-          <button className="flex-1 h-10 buttonText bg-button text-white hover:bg-button-hover transition-colors">
+          <button className="flex-1 h-10 buttonText bg-color-button text-white hover:bg-button-hover transition-colors">
             Valider
           </button>
 

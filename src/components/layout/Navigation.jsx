@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Navigation = ({navList}) => {
     return (
         <nav
@@ -5,13 +7,13 @@ const Navigation = ({navList}) => {
             
         >
             {navList.map((item) => (
-            <a
-                key={item}
-                href="#"
+            <Link
+                key={item.label}
+                to={item.path}
                 className="flex-1 text-center text-white titleText hover:opacity-80 transition-opacity whitespace-nowrap"
             >
-                {item}
-            </a>
+                {item.label}
+            </Link>
             ))}
         </nav>
     );

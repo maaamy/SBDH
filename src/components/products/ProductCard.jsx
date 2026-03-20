@@ -17,11 +17,11 @@ const ProductCard = ({ name = "Test texte d'ancrage", price = "25.99 €", image
       </p>
 
       <div className="flex items-center gap-2 w-full justify-center">
-        <span className="productTitle text-button">{price}</span>
+        <span className="productTitle text-color-button">{price}</span>
         <Info size={20} />
       </div>
 
-      <button className="buttonText w-full h-10 bg-button text-white hover:bg-product-hover active:scale-95 transition-all">
+      <button className="buttonText w-full h-10 bg-color-button text-white hover:bg-product-hover active:scale-95 transition-all">
         Ajouter au panier
       </button>
       
