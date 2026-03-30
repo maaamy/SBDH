@@ -35,12 +35,14 @@ const NavigationClient = ({ cartCount = 0 }) => {
         onClick={() => navigate("/panier")}
         className="flex-1 text-center flex justify-center relative"
       >
-        <ShoppingCart size={28} className="text-white" />
-        {cartCount > 0 && (
-          <span className="absolute top-0 right-6 bg-white text-button text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {cartCount}
-          </span>
-        )}
+        <div className="relative"> 
+          <ShoppingCart size={28} className="text-white" />
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-white text-color-button font-bold text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </div>
       </button>
 
       {/* Profil */}
