@@ -1,5 +1,5 @@
 import { Info } from "lucide-react";
-const CartSummary = ({ total }) => {
+const SummaryNoButton = ({ total }) => {
   const livraison = 10.99;
   const totalFinal = total + livraison;
 
@@ -44,12 +44,8 @@ const CartSummary = ({ total }) => {
         <Info  size={20} />
       </div>
 
-      <button className="bg-button text-white mt-4 py-3 rounded-lg font-bold bg-color-button  hover:bg-button-hover transition">
-        Passer au Paiement
-      </button>
-
     </div>
   );
 };
 
-export default CartSummary;
+export default SummaryNoButton;

@@ -11,6 +11,8 @@ import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
 import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
 import CatalogueClient from './pages/CatalogueClient.jsx'
 import Panier from './pages/Panier.jsx'
+import ConfirmationCommande from './pages/ConfirmationCommande.jsx'
+
 
 function App() {
 
@@ -32,6 +34,7 @@ function App() {
       <Route path="/catalogue" element={<CatalogueClient />}/>
 
       <Route path="/panier" element={<Panier />}/>
+      <Route path="/confirmation-commande" element={<ConfirmationCommande />}/>
     </Routes>
   )
 }

@@ -2,7 +2,7 @@ import { Trash2, Plus, Minus } from "lucide-react";
 
 const CartItem = ({ item, onUpdate, onRemove }) => {
   return (
-    <div className="flex items-center gap-4 bg-[#E8DFDF] rounded-2xl p-6">
+    <div className="flex items-center gap-4 justify-between bg-[#E8DFDF] rounded-2xl p-6">
 
       {/* Image */}
       <img
@@ -12,7 +12,7 @@ const CartItem = ({ item, onUpdate, onRemove }) => {
       />
 
       {/* Infos */}
-      <div className="bg-white/40 w-[600px] rounded-3xl py-1 px-4 flex items-center gap-4 opacity-80">
+      <div className="bg-white/40 w-[80%] rounded-3xl py-1 px-4 flex items-center gap-4 opacity-80">
         <div className="flex-1 flex flex-col gap-1">
           <p className="text-product productTitle">{item.nom}</p>
           <p className="normalText font-bold text-color-button">Nom de l'entreprise</p>
