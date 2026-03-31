@@ -1,14 +1,21 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, PenLine, Building2, Home } from "lucide-react";
 import Footer from "../components/layout/Footer";
 import FormInput from "../components/ui/FormInput";
+import { inscriptionEntreprise } from "../store/slices/authSlice";
+import { validationInscriptionEntrepriseForm } from "../utils/validation";
 
 const PageInscriptionEntreprise = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [errorForm, setErrorForm] = useState(null);
+  const { error } = useSelector((state) => state.auth);
+
 
   const [form, setForm] = useState({
     nomEntreprise: "",
@@ -19,16 +26,28 @@ const PageInscriptionEntreprise = () => {
     codePostal: "",
     pays: "",
     email: "",
-    password: "",
+    mdp: "",
     confirm: "",
   });
 
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Inscription entreprise :", form);
+
+    const errorMsg = validationInscriptionEntrepriseForm(form);
+      if (errorMsg) {
+        setErrorForm(errorMsg); 
+        return;
+      }
+      else {
+        setErrorForm(null);
+      }
+      const result = await dispatch(inscriptionEntreprise(form));
+      if (inscriptionEntreprise.fulfilled.match(result)) {
+        navigate("/"); 
+      }
   };
 
   return (
@@ -167,8 +186,8 @@ const PageInscriptionEntreprise = () => {
                   icon={<Lock size={16} />}
                   rightIcon={showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   onRightIconClick={() => setShowPassword((v) => !v)}
-                  value={form.password}
-                  onChange={handleChange("password")}
+                  value={form.mdp}
+                  onChange={handleChange("mdp")}
                 />
 
                 <FormInput
@@ -202,6 +221,10 @@ const PageInscriptionEntreprise = () => {
 
         </div>
         
+        {(error || errorForm) && (
+            <p className="normalText text-red-500 text-center">{errorForm || error}</p>
+          )}
+                
       </main>
 
       <Footer />
