@@ -7,7 +7,7 @@ import Footer from "../components/layout/Footer";
 import FormInput from "../components/ui/FormInput";
 import { validationConnexionCLientForm } from "../utils/validation";
 import { connexionClientGoogle } from "../store/slices/authSlice";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 const DEFAULT_FORM_STATE = { email: "", mdp: "" };
 
@@ -48,11 +48,6 @@ const PageConnexionClient = () => {
       navigate("/");
     }
   }
-
-  const googleLogin = useGoogleLogin({
-    onSuccess: handleGoogleLoginSuccess,
-    onError: () => setErrorForm("Erreur lors de la connexion Google."),
-  });
 
   const handleChange = (field) => (event) =>
     setForm((previous) => ({ ...previous, [field]: event.target.value }));
@@ -143,14 +138,14 @@ const PageConnexionClient = () => {
             <div className="flex-1 h-px bg-black/40" />
           </div>
 
-          <div className="flex gap-3 w-full">
-            <button
-              onClick={() => googleLogin()}
-              className="flex-1 h-11 flex items-center justify-center gap-2 bg-white border border-light rounded-full hover:bg-gray-50 normalText font-bold text-black"
-            >
-              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
-              Se connecter avec Google
-            </button>
+          <div className="flex gap-3 w-full items-center justify-center">
+            <GoogleLogin
+              onSuccess= {handleGoogleLoginSuccess}
+              onError = {() => setErrorForm("Erreur lors de la connexion Google.")}
+              shape="pill"           
+              size="large"
+              width={500}
+            />
           </div>
 
           <div className="flex flex-col items-center gap-2">
@@ -161,7 +156,8 @@ const PageConnexionClient = () => {
             >
               S'inscrire
             </button>
-            <p className="normalText text-black">Pas encore de compte ?</p>
+            <p className="normalText text-black">Pas encore de compte ?</p>*
+            
           </div>
 
         </div>

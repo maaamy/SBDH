@@ -6,7 +6,7 @@ import Footer from "../components/layout/Footer";
 import FormInput from "../components/ui/FormInput";
 import { connexionEntreprise } from "../store/slices/authSlice";
 import { validationConnexionEntrepriseForm } from "../utils/validation";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { connexionEntrepriseGoogle } from "../store/slices/authSlice";
 
 const DEFAULT_FORM_STATE = { email: "", mdp: "", siret: "" };
@@ -41,15 +41,6 @@ const PageConnexionEntreprise = () => {
     }
   };
 
-  const handleClickGoogle = () => {
-    if (!form.siret || form.siret.trim().length !== 14) {
-      setErrorForm("Veuillez saisir un SIRET valide avant de continuer avec Google.");
-      return;
-    }
-    setErrorForm(null);
-    googleLogin();
-  };
-
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const result = await dispatch(connexionEntrepriseGoogle({
       token: credentialResponse.credential,
@@ -61,10 +52,7 @@ const PageConnexionEntreprise = () => {
     }
   }
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: handleGoogleLoginSuccess,
-    onError: () => setErrorForm("Erreur lors de la connexion Google."),
-  });
+  const isSiretValid = form.siret && form.siret.trim().length === 14;
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-backgroundImg bg-cover bg-center">
@@ -158,15 +146,29 @@ const PageConnexionEntreprise = () => {
             <div className="flex-1 h-px bg-black/40" />
           </div>
 
-          <div className="flex gap-3 w-full">
 
-            <button
-              onClick={() => handleClickGoogle()}
-              className="flex-1 h-11 flex items-center justify-center gap-2 bg-white border border-light rounded-full hover:bg-gray-50 normalText font-bold text-black"
+          <div className="flex flex-col gap-3 w-full items-center justify-center">
+
+            {!isSiretValid && (
+              <p className="text-sm text-gray-500">
+                Vous devez renseigner votre SIRET avant de continuer avec Google
+              </p>
+            )}
+
+            <div
+              className={`w-full flex items-cente justify-center transition ${
+                !isSiretValid ? "opacity-50 pointer-events-none" : ""
+              }`}
             >
-              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
-              Se connecter avec Google
-            </button>
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={() => setErrorForm("Erreur lors de la connexion Google.")}
+                shape="pill"
+                size="large"
+                width={500}
+              />
+            </div>
+
           </div>
 
           <div className="flex flex-col items-center gap-2">
