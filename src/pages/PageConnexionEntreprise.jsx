@@ -1,29 +1,70 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, PenLine, Home } from "lucide-react";
 import Footer from "../components/layout/Footer";
 import FormInput from "../components/ui/FormInput";
+import { connexionEntreprise } from "../store/slices/authSlice";
+import { validationConnexionEntrepriseForm } from "../utils/validation";
+import { useGoogleLogin } from "@react-oauth/google";
+import { connexionEntrepriseGoogle } from "../store/slices/authSlice";
 
-const DEFAULT_FORM_STATE = { email: "", password: "", siret: "" };
-
-const OAUTH_PROVIDERS = [
-  { id: "google", label: "Google", icon: "https://www.google.com/favicon.ico" },
-  { id: "facebook", label: "Facebook", icon: "https://www.facebook.com/favicon.ico" },
-];
+const DEFAULT_FORM_STATE = { email: "", mdp: "", siret: "" };
 
 const PageConnexionEntreprise = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [form, setForm] = useState(DEFAULT_FORM_STATE);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorForm, setErrorForm] = useState(null);
+  const { error } = useSelector((state) => state.auth);
 
   const handleChange = (field) => (event) =>
     setForm((previous) => ({ ...previous, [field]: event.target.value }));
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    console.log("Connexion entreprise :", form, { rememberMe });
+    const errorMsg = validationConnexionEntrepriseForm(form);
+     console.log("errorirr = ", errorMsg);
+    if (errorMsg) {
+      setErrorForm(errorMsg); 
+      return;
+    }
+    else {
+      setErrorForm(null);
+    }
+    const result = await dispatch(connexionEntreprise(form));
+    if (connexionEntreprise.fulfilled.match(result)) {
+      navigate("/"); 
+    }
   };
+
+  const handleClickGoogle = () => {
+    if (!form.siret || form.siret.trim().length !== 14) {
+      setErrorForm("Veuillez saisir un SIRET valide avant de continuer avec Google.");
+      return;
+    }
+    setErrorForm(null);
+    googleLogin();
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    const result = await dispatch(connexionEntrepriseGoogle({
+      token: credentialResponse.credential,
+      siret: form.siret,
+    }));
+
+    if (connexionEntrepriseGoogle.fulfilled.match(result)) {
+      navigate("/");
+    }
+  }
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+    onError: () => setErrorForm("Erreur lors de la connexion Google."),
+  });
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-backgroundImg bg-cover bg-center">
@@ -75,8 +116,8 @@ const PageConnexionEntreprise = () => {
               icon={<Lock size={16} />}
               rightIcon={showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               onRightIconClick={() => setShowPassword((v) => !v)}
-              value={form.password}
-              onChange={handleChange("password")}
+              value={form.mdp}
+              onChange={handleChange("mdp")}
             />
 
             <div className="flex items-center justify-between">
@@ -107,6 +148,8 @@ const PageConnexionEntreprise = () => {
               </button>
             </div>
 
+            {(error || errorForm) && <p className="normalText text-red-500 text-center">{errorForm || error}</p>}
+
           </form>
 
           <div className="flex items-center gap-3 w-full">
@@ -116,16 +159,14 @@ const PageConnexionEntreprise = () => {
           </div>
 
           <div className="flex gap-3 w-full">
-            {OAUTH_PROVIDERS.map((provider) => (
-              <button
-                key={provider.id}
-                type="button"
-                className="flex-1 h-11 flex items-center justify-center gap-2 bg-white border border-light rounded-full hover:bg-gray-50 transition-colors normalText font-bold text-black"
-              >
-                <img src={provider.icon} alt={provider.label} className="w-4 h-4" />
-                Continuer avec {provider.label}
-              </button>
-            ))}
+
+            <button
+              onClick={() => handleClickGoogle()}
+              className="flex-1 h-11 flex items-center justify-center gap-2 bg-white border border-light rounded-full hover:bg-gray-50 normalText font-bold text-black"
+            >
+              <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
+              Se connecter avec Google
+            </button>
           </div>
 
           <div className="flex flex-col items-center gap-2">
