@@ -1,20 +1,22 @@
-import { Routes, Route } from 'react-router-dom'
-import './App.css'
-import PageAccueil from './pages/PageAccueil.jsx'
-import PageConnexion from './pages/PageConnexion.jsx'
-import PageInscription from './pages/PageInscription.jsx'
-import PageInscriptionClient from './pages/PageInscriptionClient.jsx'
-import PageInscriptionEntreprise from './pages/PageInscriptionEntreprise.jsx'
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import PageAccueil from './pages/PageAccueil.jsx';
+import PageConnexion from './pages/PageConnexion.jsx';
+import PageInscription from './pages/PageInscription.jsx';
+import PageInscriptionClient from './pages/PageInscriptionClient.jsx';
+import PageInscriptionEntreprise from './pages/PageInscriptionEntreprise.jsx';
 import PageConnexionClient from "./pages/PageConnexionClient.jsx";
 import PageConnexionEntreprise from "./pages/PageConnexionEntreprise.jsx";
 import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
 import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
 import CatalogueClient from './pages/CatalogueClient.jsx'
 
+
 function App() {
 
- return (
+  return (
     <Routes>
+      {/* Pages publiques */}
       <Route path="/" element={<PageAccueil />}/>
 
       <Route path="/connexion" element={<PageConnexion />}/>
@@ -27,8 +29,10 @@ function App() {
 
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
-      
+
+      {/* Pages protégées (connexion requise) */}
       <Route path="/catalogue" element={<CatalogueClient />}/>
+
     </Routes>
   )
 }

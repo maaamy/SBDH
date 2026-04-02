@@ -5,6 +5,7 @@ import Sidebar from "../components/layout/Sidebar";
 import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
 import { Home } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const NAV_LIST = [
   { label: "Accueil", path: "/", icon: <Home size={28} /> },
@@ -13,7 +14,20 @@ const NAV_LIST = [
   { label: "Se connecter", path: "/connexion" },
 ];
 
+
+
 const PageAccueil = () => {
+
+  const navigate = useNavigate();
+
+  const handleDeconnexion = () => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
+
+      navigate('/connexion')
+  }
+
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
       <Banner />
@@ -30,6 +44,10 @@ const PageAccueil = () => {
             <ProductRow key={title} title={title} products={PRODUCTS}/>
           ))}
         </section>
+
+        <button onClick={handleDeconnexion}>
+            Se déconnecter google
+        </button>
 
       </main>
 
