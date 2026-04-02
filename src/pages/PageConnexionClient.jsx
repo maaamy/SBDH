@@ -35,7 +35,7 @@ const PageConnexionClient = () => {
       }
       const result = await dispatch(connexionClient(form));
       if (connexionClient.fulfilled.match(result)) {
-        navigate("/"); 
+        navigate("/catalogue"); 
       }
   };
 
@@ -45,7 +45,7 @@ const PageConnexionClient = () => {
     }));
 
     if (connexionClientGoogle.fulfilled.match(result)) {
-      navigate("/");
+      navigate("/catalogue"); 
     }
   }
 

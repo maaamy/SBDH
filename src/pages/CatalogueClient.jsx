@@ -6,9 +6,13 @@ import ProductGrid from "../components/products/ProductGrid";
 import { PRODUITS } from "../data/products";
 import Banner from "../components/layout/Banner";
 import { ENTREPRISES, CATEGORIES } from "../data/products";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 
 const CatalogueClient = () => {
+  const dispatch = useDispatch();
+
   const [cart, setCart] = useState([]);
 
   const handleAddToCart = (product) => {
@@ -24,6 +28,11 @@ const CatalogueClient = () => {
       return [...prev, { ...product, quantity: 1 }];
     });
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
@@ -45,6 +54,8 @@ const CatalogueClient = () => {
 
         </section>
 
+        
+      <button onClick={handleLogout}>Se déconnecter</button>
       </main>
 
       <Footer />

@@ -6,6 +6,8 @@ import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
 import { Home } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const NAV_LIST = [
   { label: "Accueil", path: "/", icon: <Home size={28} /> },
@@ -15,18 +17,15 @@ const NAV_LIST = [
 ];
 
 
-
 const PageAccueil = () => {
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleDeconnexion = () => {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user_id')
-
-      navigate('/connexion')
+      dispatch(logout());
+      navigate("/connexion");
   }
-
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
@@ -46,7 +45,7 @@ const PageAccueil = () => {
         </section>
 
         <button onClick={handleDeconnexion}>
-            Se déconnecter google
+            Se déconnecter
         </button>
 
       </main>
