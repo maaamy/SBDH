@@ -7,8 +7,10 @@ import PageInscriptionClient from './pages/PageInscriptionClient.jsx';
 import PageInscriptionEntreprise from './pages/PageInscriptionEntreprise.jsx';
 import PageConnexionClient from "./pages/PageConnexionClient.jsx";
 import PageConnexionEntreprise from "./pages/PageConnexionEntreprise.jsx";
-import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx';
-import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx';
+import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
+import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
+import CatalogueClient from './pages/CatalogueClient.jsx'
+
 
 function App() {
 
@@ -27,8 +29,10 @@ function App() {
 
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
-      
+
       {/* Pages protégées (connexion requise) */}
+      <Route path="/catalogue" element={<CatalogueClient />}/>
+
     </Routes>
   )
 }
