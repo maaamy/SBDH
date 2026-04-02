@@ -3,21 +3,55 @@ import SearchBar from "../ui/SearchBar";
 import FilterSection from "../filters/FilterSection";
 import Checkbox from "../ui/Checkbox";
 
-const Sidebar = ({ companyList, categoryList}) => {
+const Sidebar = ({ companyList, categoryList }) => {
 
   const [entreprises, setEntreprises] = useState(
-  Object.fromEntries(companyList.map((e) => [e, false]))
-);
+    Object.fromEntries(companyList.map((e) => [e, false]))
+  );
 
   const [categories, setCategories] = useState(
-  Object.fromEntries(categoryList.map((e) => [e, false]))
-);
+    Object.fromEntries(
+      categoryList.map((cat) => [
+        cat.nom,
+        {
+          checked: false,
+          sous_categories: Object.fromEntries(cat.sous_categories.map((scat) => [scat, false]))
+        }
+      ])
+    )
+  );
 
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
 
   const toggleEntreprise = (k) => setEntreprises((p) => ({ ...p, [k]: !p[k] }));
-  const toggleCategorie = (k) => setCategories((p) => ({ ...p, [k]: !p[k] }));
+  
+  const toggleCategory = (cat) =>
+    setCategories((p) => {
+      const newChecked = !p[cat].checked;
+      return {
+        ...p,
+        [cat]: {
+          checked: newChecked,
+          sous_categories: Object.fromEntries(
+            Object.keys(p[cat].sous_categories).map((s) => [s, newChecked])
+          )
+        }
+      };
+  });
+
+  const toggleSubCategory = (cat, sous) => {
+    setCategories((p) => {
+      const newSub = { ...p[cat].sous_categories, [sous]: !p[cat].sous_categories[sous] };
+      const allChecked = Object.values(newSub).every(Boolean);
+      return {
+        ...p,
+        [cat]: {
+          checked: allChecked,
+          sous_categories: newSub
+        }
+      };
+    })};
 
   return (
 
@@ -66,9 +100,22 @@ const Sidebar = ({ companyList, categoryList}) => {
         </FilterSection>
 
         <FilterSection title="Catégories">
-          {Object.keys(categories).map((k) => (
-            <Checkbox key={k} label={k} checked={categories[k]} onChange={() => toggleCategorie(k)} />
+
+          {Object.entries(categories).map(([cat,val]) => (
+
+            <div key={cat} className="titleText font-extrabold">
+
+              <Checkbox key={cat} label={cat} checked={val.checked} onChange={() => toggleCategory(cat) } />
+              
+              <div key={`${cat}-sub-cat`} className="!font-normal px-7">
+                {Object.entries(val.sous_categories).map(([subCat, checked]) => (
+                  <Checkbox key={subCat} label={subCat} checked={checked} onChange={() => toggleSubCategory(cat,subCat)} />
+                ))}
+              </div>
+
+            </div>
           ))}
+
         </FilterSection>
 
         <div className="flex gap-2 mt-1">
