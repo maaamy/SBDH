@@ -1,46 +1,62 @@
 import { useState } from "react";
-import NavigationClient from "../components/layout/NavigationClient";
-import SidebarCatalogue from "../components/layout/SidebarCatalogue";
+import NavigationClient from "../components/layout/CustomerNavigation";
+import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
 import ProductGrid from "../components/products/ProductGrid";
-import { PRODUITS } from "../data/ProduitCatalogue";
+import { PRODUITS } from "../data/products";
+import Banner from "../components/layout/Banner";
+import { ENTREPRISES, CATEGORIES } from "../data/products";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectUser } from "../store/slices/authSlice";
+
 
 const CatalogueClient = () => {
-  const [panier, setPanier] = useState([]);
+  const customer = useSelector(selectUser);
+  const dispatch = useDispatch();
+  
+  const [cart, setCart] = useState([]);
 
-  const handleAddToCart = (produit) => {
-    setPanier((prev) => {
-      const existing = prev.find((p) => p.id === produit.id);
+  const handleAddToCart = (product) => {
+    setCart((prev) => {
+      const existing = prev.find((p) => p.id === product.id);
 
       if (existing) {
         return prev.map((p) =>
-          p.id === produit.id ? { ...p, quantite: p.quantite + 1 } : p
+          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
         );
       }
 
-      return [...prev, { ...produit, quantite: 1 }];
+      return [...prev, { ...product, quantity: 1 }];
     });
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
+      <Banner />
 
-      <NavigationClient cartCount={panier.reduce((acc, p) => acc + p.quantite, 0)} />
+      <NavigationClient cartCount={cart.reduce((acc, p) => acc + p.quantity, 0)} customer={customer} />
 
-      <main className="flex flex-1 p-4">
+      <main className="flex items-start gap-0 p-4 w-full flex-1">
 
-        <SidebarCatalogue />
+        <Sidebar companyList={ENTREPRISES} categoryList={CATEGORIES}/>
 
-        <section className="productTitle text-color-button">
-          <h1>Produits</h1>
+        <section className="flex-1 flex flex-col gap-2 px-3 overflow-hidden min-w-0">
+          <h1 className="titleText text-color-button">Produits</h1>
 
           <ProductGrid 
-            produits={PRODUITS} 
+            products={PRODUITS} 
             onAddToCart={handleAddToCart}
           />
 
         </section>
 
+        
+      <button onClick={handleLogout}>Se déconnecter</button>
       </main>
 
       <Footer />

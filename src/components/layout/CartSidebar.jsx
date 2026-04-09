@@ -1,11 +1,11 @@
-import { Search } from "lucide-react";
 import PayPal from "../../assets/Paypal.png";
 import ApplePay from "../../assets/Applepay.jpg";
 import Visa from "../../assets/Visa.jpg";
 import MasterCard from "../../assets/Mastercard.jpg";
 import GPay from "../../assets/Googlepay.jpg";
+import SearchBar from "../ui/SearchBar";
 
-const SidebarPanier = () => {
+const CartSidebar = () => { 
   return (
     <aside className="bg-sidebar w-72 shrink-0 self-stretch rounded-3xl overflow-hidden py-10 px-4 flex flex-col gap-5 opacity-80">
 
@@ -13,18 +13,7 @@ const SidebarPanier = () => {
 
         <p className="secondaryTitleText text-color-button text-center">Mon panier</p>
 
-      
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Rechercher dans mon panier"
-            className="bg-white/50 text-grey italic text-xs w-full h-10 pl-3 pr-10 rounded border border-gray-300 focus:ring-2 focus:ring-button outline-non"
-          />
-          <Search
-            size={18}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-grey"
-          />
-        </div>
+        <SearchBar />
 
       {/* Paiements */}
         <div className="flex flex-col gap-4 mt-4">
@@ -49,4 +38,4 @@ const SidebarPanier = () => {
   );
 };
 
-export default SidebarPanier;
+export default CartSidebar;

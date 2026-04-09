@@ -8,8 +8,7 @@ const Checkbox = ({ label, checked, onChange }) => {
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="w-5 h-4 border border-black bg-white appearance-none 
-        checked:bg-black cursor-pointer"
+        className="w-4 h-4 cursor-pointer accent-[brown]"
       />
       
       <span className="normalText text-black">

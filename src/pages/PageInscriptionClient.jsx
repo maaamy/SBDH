@@ -1,14 +1,20 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, Home } from "lucide-react";
 import Footer from "../components/layout/Footer";
 import FormInput from "../components/ui/FormInput";
+import { inscriptionClient } from "../store/slices/authSlice";
+import { validateInscriptionClientForm } from "../utils/validation";
 
 const PageInscriptionClient = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [errorForm, setErrorForm] = useState(null);
+  const { error } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     nom: "",
@@ -22,16 +28,30 @@ const PageInscriptionClient = () => {
     codePostal: "",
     pays: "",
     email: "",
-    password: "",
+    mdp: "",
     confirm: "",
   });
+
 
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Inscription client :", form);
+    
+    const errorMsg = validateInscriptionClientForm(form);
+   
+    if (errorMsg) {
+      setErrorForm(errorMsg);
+      return;
+    }
+    else {
+      setErrorForm(null);
+    }
+    const result = await dispatch(inscriptionClient(form));
+    if (inscriptionClient.fulfilled.match(result)) {
+      navigate("/catalogue"); 
+    }
   };
 
   return (
@@ -204,8 +224,8 @@ const PageInscriptionClient = () => {
                   icon={<Lock size={16} />}
                   rightIcon={showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   onRightIconClick={() => setShowPassword((v) => !v)}
-                  value={form.password}
-                  onChange={handleChange("password")}
+                  value={form.mdp}
+                  onChange={handleChange("mdp")}
                 />
 
                 <FormInput
@@ -222,7 +242,7 @@ const PageInscriptionClient = () => {
 
             </div>
 
-            {/* Bouton S'inscrire */}
+            {/* Bouton s'inscrire */}
             <div className="flex justify-center mt-2">
 
               <button
@@ -235,6 +255,10 @@ const PageInscriptionClient = () => {
             </div>
 
           </form>
+
+          {(error || errorForm) && (
+            <p className="normalText text-red-500 text-center">{errorForm || error}</p>
+          )}
 
         </div>
 

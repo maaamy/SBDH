@@ -1,11 +1,13 @@
 import { useState } from "react";
-import NavigationClient from "../components/layout/NavigationClient";
 import Footer from "../components/layout/Footer";
 import CartItem from "../components/layout/CartItem";
 import CartSummary from "../components/layout/CartSummary";
 import { PRODUCTS } from "../data/PanierProduit";
 import Banner from "../components/layout/Banner";
-import SidebarPanier from "../components/layout/SidebarPanier";
+import CartSidebar from "../components/layout/CartSidebar";
+import CustomerNavigation from "../components/layout/CustomerNavigation";
+import { selectUser } from "../store/slices/authSlice";
+import { useSelector } from "react-redux";
 
 const PANIER_MOCK = [
   { id: 1, quantite: 1 },
@@ -16,7 +18,7 @@ const PANIER_MOCK = [
 ];
 
 const Panier = () => {
-
+  const customer = useSelector(selectUser);
   const [items, setItems] = useState(
     PANIER_MOCK.map((item) => {
       const produit = PRODUCTS.find((p) => p.id === item.id);
@@ -52,16 +54,19 @@ const Panier = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-backgroundImg bg-cover">
+    <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
 
       <Banner />
 
-      <NavigationClient cartCount={cartCount} />
-      <main className="flex gap-6 px-10 py-8 flex-1">
-        <SidebarPanier />
-        <div className="flex-1 flex flex-col gap-4">
-            <h1 className="titleText text-color-button text-button">Panier</h1>
-            <h1 className="text-button text-black font-bold">
+      <CustomerNavigation cartCount={cartCount} customer={customer} />
+
+      <main className="flex items-start gap-0 p-4 w-full flex-1">
+
+        <CartSidebar /> 
+
+        <section className="flex-1 flex flex-col gap-2 px-3 overflow-hidden min-w-0">
+           <h1 className="titleText text-color-button">Panier</h1>
+           <h1 className="text-button text-black font-bold">
               Il y a {items.length} article(s) dans votre panier
             </h1>
             {items.map((item) => (
@@ -72,7 +77,7 @@ const Panier = () => {
                     onRemove={handleRemove}
                 />
             ))}
-        </div>
+        </section>
 
         <CartSummary total={total} />
 
