@@ -10,11 +10,11 @@ import PageConnexionEntreprise from "./pages/PageConnexionEntreprise.jsx";
 import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
 import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
 import CatalogueClient from './pages/CatalogueClient.jsx'
+import Panier from './pages/Panier.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { verifyToken } from './store/slices/authSlice.js';
-
 
 function App() {
 
@@ -43,7 +43,9 @@ function App() {
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
         <Route path="/catalogue" element={<CatalogueClient />}/>
+        <Route path="/panier" element={<Panier />}/>
       </Route>
+
       
 
     </Routes>
