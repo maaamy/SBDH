@@ -43,10 +43,11 @@ function App() {
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
         <Route path="/catalogue" element={<CatalogueClient />}/>
+        <Route path="/panier" element={<Panier />}/>
       </Route>
 
-      <Route path="/panier" element={<Panier />}/>
       
+
     </Routes>
   )
 }

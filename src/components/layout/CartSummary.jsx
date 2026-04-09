@@ -4,7 +4,7 @@ const CartSummary = ({ total }) => {
   const finalTotal = total + delivery;
 
   return (
-    <div className="bg-white rounded-2xl w-80 flex flex-col gap-2 p-6 h-fit">
+    <div className="bg-white rounded-2xl w-80 flex flex-col gap-2 p-6 h-fit min-w-0">
 
       <h2 className=" text-color-button text-center font-bold ">
         RECAPITULATIF DE LA COMMANDE
@@ -34,7 +34,7 @@ const CartSummary = ({ total }) => {
           className="flex-1 h-full px-4 italic text-sm outline-none bg-transparent"
         />
 
-        <button className="h-[80%] px-6 bg-button text-white font-bold rounded-2xl -ml-10 bg-button-hover transition-colors">
+        <button className="h-[80%] px-3 bg-button text-white font-bold rounded-2xl -ml-10 bg-button-hover transition-colors">
           Appliquer
         </button>
 
