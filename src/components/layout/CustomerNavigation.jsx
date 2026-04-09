@@ -8,7 +8,7 @@ const CUSTOMER_NAV_LIST = [
   { label: "Offres", path: "#" },
 ];
 
-const CustomerNavigation = ({ cartCount = 0 }) => {
+const CustomerNavigation = ({ cartCount = 0 , customer }) => {
   const navigate = useNavigate();
 
   return (
@@ -26,11 +26,11 @@ const CustomerNavigation = ({ cartCount = 0 }) => {
 
       
       <button
-        onClick={() => navigate("/profil")}
+        onClick={() => navigate("/profil/")}
         className="flex-1 flex items-center justify-center gap-2 text-white titleText"
       >
           <User size={28} />
-          <span>Nom_Client</span>
+          <span>{customer.nom}</span>
       </button>
 
     </Navigation>

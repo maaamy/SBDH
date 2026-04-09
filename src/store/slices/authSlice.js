@@ -107,7 +107,7 @@ const authSlice = createSlice({
       })
       .addCase(verifyToken.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user.user_id, email: payload.user.email, type: payload.user.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(verifyToken.rejected, (state) => {
@@ -121,7 +121,7 @@ const authSlice = createSlice({
       })
       .addCase(inscriptionClient.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(inscriptionClient.rejected, (state, { payload }) => {
@@ -135,7 +135,7 @@ const authSlice = createSlice({
       })
       .addCase(connexionClient.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(connexionClient.rejected, (state, { payload }) => {
@@ -149,7 +149,7 @@ const authSlice = createSlice({
       })
       .addCase(inscriptionEntreprise.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(inscriptionEntreprise.rejected, (state, { payload }) => {
@@ -163,7 +163,7 @@ const authSlice = createSlice({
       })
       .addCase(connexionEntreprise.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(connexionEntreprise.rejected, (state, { payload }) => {
@@ -177,7 +177,7 @@ const authSlice = createSlice({
       })
       .addCase(connexionClientGoogle.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(connexionClientGoogle.rejected, (state, { payload }) => {
@@ -191,7 +191,7 @@ const authSlice = createSlice({
       })
       .addCase(connexionEntrepriseGoogle.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type};
+        state.user = { user_id: payload.user_id, email: payload.email, type: payload.type, nom: payload.nom};
         state.isAuthenticated = true;
       })
       .addCase(connexionEntrepriseGoogle.rejected, (state, { payload }) => {
@@ -207,5 +207,7 @@ const authSlice = createSlice({
       });
   }
 });
+
+export const selectUser = (state) => state.auth.user;
 
 export default authSlice.reducer;
