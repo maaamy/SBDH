@@ -2,7 +2,7 @@ import { Trash2, Plus, Minus } from "lucide-react";
 
 const CartItem = ({ item, onUpdate, onRemove }) => {
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-3 bg-[#E8DFDF] rounded-2xl p-4">
+    <div className="flex flex-col lg:flex-row items-center gap-3 bg-beige rounded-2xl p-4">
 
       <img
         src={item.image}
@@ -19,7 +19,7 @@ const CartItem = ({ item, onUpdate, onRemove }) => {
       </div>
 
       <div className="flex flex-row lg:flex-col items-center gap-4 lg:gap-3 flex-shrink-0">
-        <div className="flex items-center gap-2 border border-[#D19000] font-bold rounded-full px-2 py-1">
+        <div className="flex items-center gap-2 border border-product font-bold rounded-full px-2 py-1">
           <button onClick={() => onUpdate(item.id, item.quantite - 1)}>
             <Minus size={14} />
           </button>

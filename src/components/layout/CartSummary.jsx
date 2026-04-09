@@ -1,7 +1,11 @@
 import { Info } from "lucide-react";
-const CartSummary = ({ total }) => {
+import { useNavigate } from "react-router-dom";
+
+const CartSummary = ({ total, showButton }) => {
   const delivery = 10.99;
   const finalTotal = total + delivery;
+  
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white rounded-2xl w-80 flex flex-col gap-2 p-6 h-fit min-w-0">
@@ -45,9 +49,13 @@ const CartSummary = ({ total }) => {
         <Info  size={20} />
       </div>
 
-      <button className="bg-button text-white mt-4 py-3 rounded-lg font-bold bg-color-button  hover:bg-button-hover transition">
-        Passer au Paiement
-      </button>
+      { showButton &&
+        <button 
+          onClick={() => navigate("/confirmation-commande")}
+          className="bg-button text-white mt-4 py-3 rounded-lg font-bold bg-color-button  hover:bg-button-hover transition">
+          Passer au Paiement
+        </button>
+      }
 
     </div>
   );
