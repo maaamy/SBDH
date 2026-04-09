@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import PayPal from "../../assets/Paypal.png";
 import ApplePay from "../../assets/Applepay.jpg";
 import Visa from "../../assets/Visa.jpg";
