@@ -13,7 +13,7 @@ const ProductRow = ({ title, products }) => {
 
       <div className="flex gap-3 items-start overflow-x-auto py-3 scrollbar-hide">
         {products.map((p, i) => (
-          <ProductCard key={i} {...p} />
+          <ProductCard key={i} product={p} />
         ))}
 
         <VoirPlus />

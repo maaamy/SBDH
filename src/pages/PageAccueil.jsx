@@ -4,18 +4,31 @@ import Navigation from "../components/layout/Navigation";
 import Sidebar from "../components/layout/Sidebar";
 import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
+import { Home } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const NAV_LIST = [
-  { label: "Accueil", path: "/" },
+  { label: "Accueil", path: "/", icon: <Home size={28} /> },
   { label: "A propos", path: "#" },
   { label: "S'inscrire", path: "/inscription" },
   { label: "Se connecter", path: "/connexion" },
 ];
 
+
 const PageAccueil = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleDeconnexion = () => {
+      dispatch(logout());
+      navigate("/connexion");
+  }
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
-      
       <Banner />
 
       <Navigation navList={NAV_LIST} />
@@ -30,6 +43,10 @@ const PageAccueil = () => {
             <ProductRow key={title} title={title} products={PRODUCTS}/>
           ))}
         </section>
+
+        <button onClick={handleDeconnexion}>
+            Se déconnecter
+        </button>
 
       </main>
 
