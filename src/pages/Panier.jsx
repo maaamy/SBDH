@@ -17,7 +17,7 @@ const PANIER_MOCK = [
   { id: 5, quantite: 1 },
 ];
 
-const Panier = () => {
+const Panier = ( { showButton=true, children } ) => {
   const customer = useSelector(selectUser);
   const [items, setItems] = useState(
     PANIER_MOCK.map((item) => {
@@ -79,7 +79,12 @@ const Panier = () => {
             ))}
         </section>
 
-        <CartSummary total={total} />
+        <div className="flex flex-col gap-6 w-80 ml-auto">
+
+          <CartSummary total={total} showButton={showButton} />
+          { children }
+
+        </div>
 
       </main>
 

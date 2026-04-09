@@ -11,6 +11,7 @@ import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
 import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
 import CatalogueClient from './pages/CatalogueClient.jsx'
 import Panier from './pages/Panier.jsx'
+import ConfirmationCommande from './pages/ConfirmationCommande.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -39,14 +40,13 @@ function App() {
 
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
-
+     
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
         <Route path="/catalogue" element={<CatalogueClient />}/>
         <Route path="/panier" element={<Panier />}/>
+        <Route path="/confirmation-commande" element={<ConfirmationCommande />}/>
       </Route>
-
-      
 
     </Routes>
   )

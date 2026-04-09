@@ -16,6 +16,7 @@ export default {
         product: "#d19000",
         light: "#d9d9d9",
         grey: "#9a9999",
+        beige: "#E8DFDF",
       },
       backgroundImage: {
         "backgroundImg": "url('/src/assets/background.avif')",
