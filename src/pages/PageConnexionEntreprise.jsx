@@ -27,7 +27,6 @@ const PageConnexionEntreprise = () => {
   const handleSubmit = async(event) => {
     event.preventDefault();
     const errorMsg = validationConnexionEntrepriseForm(form);
-     console.log("errorirr = ", errorMsg);
     if (errorMsg) {
       setErrorForm(errorMsg); 
       return;

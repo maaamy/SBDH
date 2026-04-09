@@ -50,7 +50,7 @@ const PageInscriptionClient = () => {
     }
     const result = await dispatch(inscriptionClient(form));
     if (inscriptionClient.fulfilled.match(result)) {
-      navigate("/"); 
+      navigate("/catalogue"); 
     }
   };
 

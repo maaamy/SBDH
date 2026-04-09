@@ -6,9 +6,14 @@ import ProductGrid from "../components/products/ProductGrid";
 import { PRODUITS } from "../data/products";
 import Banner from "../components/layout/Banner";
 import { ENTREPRISES, CATEGORIES } from "../data/products";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectUser } from "../store/slices/authSlice";
 
 
 const CatalogueClient = () => {
+  const customer = useSelector(selectUser);
+  const dispatch = useDispatch();
+  
   const [cart, setCart] = useState([]);
 
   const handleAddToCart = (product) => {
@@ -25,11 +30,16 @@ const CatalogueClient = () => {
     });
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
       <Banner />
 
-      <NavigationClient cartCount={cart.reduce((acc, p) => acc + p.quantity, 0)} />
+      <NavigationClient cartCount={cart.reduce((acc, p) => acc + p.quantity, 0)} customer={customer} />
 
       <main className="flex items-start gap-0 p-4 w-full flex-1">
 
@@ -45,6 +55,8 @@ const CatalogueClient = () => {
 
         </section>
 
+        
+      <button onClick={handleLogout}>Se déconnecter</button>
       </main>
 
       <Footer />

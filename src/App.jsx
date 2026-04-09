@@ -10,9 +10,19 @@ import PageConnexionEntreprise from "./pages/PageConnexionEntreprise.jsx";
 import ReinitialisationEmail from './pages/ReinitialisationEmail.jsx'
 import ReinitialisationMotDePasse from './pages/ReinitialisationMotDePasse.jsx'
 import CatalogueClient from './pages/CatalogueClient.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { verifyToken } from './store/slices/authSlice.js';
 
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(verifyToken());
+  }, []);
 
   return (
     <Routes>
@@ -30,8 +40,11 @@ function App() {
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
 
-      {/* Pages protégées (connexion requise) */}
-      <Route path="/catalogue" element={<CatalogueClient />}/>
+      {/* Pages protégées clients */}
+      <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
+        <Route path="/catalogue" element={<CatalogueClient />}/>
+      </Route>
+      
 
     </Routes>
   )
