@@ -1,7 +1,7 @@
 import { Info } from "lucide-react";
 const CartSummary = ({ total }) => {
-  const livraison = 10.99;
-  const totalFinal = total + livraison;
+  const delivery = 10.99;
+  const finalTotal = total + delivery;
 
   return (
     <div className="bg-white rounded-2xl w-80 flex flex-col gap-2 p-6 h-fit">
@@ -17,13 +17,14 @@ const CartSummary = ({ total }) => {
 
       <div className="flex mt-2 justify-between font-bold">
         <span>LIVRAISON</span>
-        <span className="text-color-button">{livraison.toFixed(2)} €</span>
+        <span className="text-color-button">{delivery.toFixed(2)} €</span>
       </div>
 
       <div className="flex mt-2 justify-between font-bold">
         <span>TOTAL</span>
-        <span className="text-color-button">{totalFinal.toFixed(2)} €</span>
+        <span className="text-color-button">{finalTotal.toFixed(2)} €</span>
       </div>
+
       {/* Code promo */}
       <div className="flex items-center border border-black h-14 px-2 mt-4">
   

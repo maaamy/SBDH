@@ -5,7 +5,7 @@ import CartItem from "../components/layout/CartItem";
 import CartSummary from "../components/layout/CartSummary";
 import { PRODUCTS } from "../data/PanierProduit";
 import Banner from "../components/layout/Banner";
-import SidebarPanier from "../components/layout/SidebarPanier";
+import CartSidebar from "../components/layout/CartSidebar";
 
 const PANIER_MOCK = [
   { id: 1, quantite: 1 },
@@ -52,13 +52,16 @@ const Panier = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-backgroundImg bg-cover">
+    <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
 
       <Banner />
 
       <NavigationClient cartCount={cartCount} />
-      <main className="flex gap-6 px-10 py-8 flex-1">
-        <SidebarPanier />
+
+      <main className="flex items-start gap-0 p-4 w-full flex-1">
+
+        <CartSidebar /> 
+
         <div className="flex-1 flex flex-col gap-4">
             <h1 className="titleText text-color-button text-button">Panier</h1>
             <h1 className="text-button text-black font-bold">
