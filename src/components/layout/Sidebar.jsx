@@ -123,7 +123,16 @@ const Sidebar = ({ companyList, categoryList }) => {
           <button
             onClick={() => {
               setEntreprises(Object.fromEntries(Object.keys(entreprises).map((k) => [k, false])));
-              setCategories(Object.fromEntries(Object.keys(categories).map((k) => [k, false])));
+              setCategories(
+                Object.fromEntries(
+                  Object.keys(categories).map((k) => [k, {
+                    checked: false,
+                    sous_categories: Object.fromEntries(
+                      Object.keys(categories[k].sous_categories).map((s) => [s, false])
+                    )
+                  }])
+                )
+              );              
               setMin(""); setMax("");
             }}
             className="flex-1 h-10 buttonText bg-button-5 text-white hover:bg-button-5-hover transition-colors"

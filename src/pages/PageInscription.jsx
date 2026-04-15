@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Home } from "lucide-react";
 import Footer from "../components/layout/Footer";
-import RoleCard from "../components/RoleCard";
+import RoleCard from "../components/ui/RoleCard";
 
 const PageInscription = () => {
   const navigate = useNavigate();

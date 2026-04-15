@@ -15,8 +15,8 @@ const ProductCard = ({product, onAddToCart}) => {
         {product.nom}
       </p>
 
-      <div className="flex items-center gap-2 w-full justify-center">
-        <span className="productTitle text-color-button">{product.prix}</span>
+      <div className="flex flex-row items-center gap-2 w-full justify-center">
+        <span className="productTitle text-color-button">{product.prix.toFixed(2)} €</span>
         <Info size={20} />
       </div>
 
