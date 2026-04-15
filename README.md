@@ -18,3 +18,27 @@ npm install
 npm run dev
 ```
 
+## Variables d’environnement
+
+Le projet nécessite certaines variables d’environnement pour fonctionner correctement.
+
+Créer un fichier .env à la racine du projet :
+
+```bash
+VITE_GOOGLE_CLIENT_ID=google_client_id
+```
+
+
+## Tests
+
+Pour exécuter les tests :
+
+```bash
+
+npm run test
+
+# Pour lancer les tests en mode watch :
+npm run test:watch
+```
+
+Assurez-vous que toutes les dépendances sont bien installées avant de lancer les tests.
