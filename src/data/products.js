@@ -17,10 +17,10 @@ import Boomer from "../assets/Boomer.jpg";
 
 
 export const PRODUCTS = [
-  { nom: "Test texte d'ancrage", prix: "25.99 €", image: ours },
-  { nom: "Test texte d'ancrage", prix: "25.99 €", image: ours },
-  { nom: "Test texte d'ancrage", prix: "25.99 €", image: ours },
-  { nom: "Test texte d'ancrage", prix: "25.99 €", image: ours },
+  { nom: "Test texte d'ancrage", prix: 25.99, image: ours },
+  { nom: "Test texte d'ancrage", prix: 25.99, image: ours },
+  { nom: "Test texte d'ancrage", prix: 25.99, image: ours },
+  { nom: "Test texte d'ancrage", prix: 25.99, image: ours },
 ];
 
 export const SECTIONS = [
