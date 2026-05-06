@@ -14,16 +14,34 @@ import Panier from './pages/Panier.jsx'
 import ConfirmationCommande from './pages/ConfirmationCommande.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { verifyToken } from './store/slices/authSlice.js';
+import { fetchCustomer } from './store/slices/customerSlice.js';
+import ProfilClient from './pages/ProfilClient.jsx';
+import DashboardClient from './pages/DashboardClient.jsx';
+import HistoriqueCommandes from './pages/HistoriqueCommandes.jsx';
 
 function App() {
 
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    dispatch(verifyToken());
+    dispatch(verifyToken()).then((result) => {
+    const user = result.payload;
+    if (user?.type === "client") {
+      dispatch(fetchCustomer(user.user_id)).finally(() => setLoading(false));
+    } else if (user?.type === "entreprise") {
+      //dispatch(fetchEntreprise(user.id));
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  });
   }, []);
+
+  if(loading) return  <div>Chargement...</div>;
 
   return (
     <Routes>
@@ -40,12 +58,18 @@ function App() {
 
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
+
+      
      
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
         <Route path="/catalogue" element={<CatalogueClient />}/>
         <Route path="/panier" element={<Panier />}/>
         <Route path="/confirmation-commande" element={<ConfirmationCommande />}/>
+        <Route path="/profil" element={<ProfilClient />}/>
+        <Route path="/tableau-de-bord" element={<DashboardClient />}/>
+        <Route path="/commandes" element={<HistoriqueCommandes />}/>    
+
       </Route>
 
     </Routes>

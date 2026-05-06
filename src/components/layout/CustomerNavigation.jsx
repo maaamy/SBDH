@@ -26,7 +26,7 @@ const CustomerNavigation = ({ cartCount = 0 , customer }) => {
 
       
       <button
-        onClick={() => navigate("/profil/")}
+        onClick={() => navigate("/profil")}
         className="flex-1 flex items-center justify-center gap-2 text-white titleText"
       >
           <User size={28} />

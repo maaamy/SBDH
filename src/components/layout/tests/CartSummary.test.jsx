@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import CartSummary from "..//CartSummary";
+import CartSummary from "../CartSummary";
 
 const mockNavigate = vi.hoisted(() => vi.fn());
 

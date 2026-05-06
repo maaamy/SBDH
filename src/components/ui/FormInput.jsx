@@ -6,7 +6,8 @@ const FormInput = ({
     rightIcon, 
     onRightIconClick, 
     value, 
-    onChange }) => {
+    onChange,
+    readOnly = false }) => {
         
     return (
 
@@ -32,6 +33,7 @@ const FormInput = ({
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
+                    readOnly = {readOnly}
                     className={`
                         w-full h-14 bg-white rounded-full border-2 border-black
                         normalText text-black placeholder:text-grey
