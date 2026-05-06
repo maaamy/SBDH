@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "../../services/authService";
-import { createSelector } from "@reduxjs/toolkit";
 import { fetchCustomer } from "./customerSlice";
 
 
@@ -219,12 +218,4 @@ const authSlice = createSlice({
 
 export const selectUser = (state) => state.auth.user;
 
-
-export const selectUserIdAndName = createSelector(
-  (state) => state.auth.user,
-  (user) => ({
-    userId: user?.user_id,
-    userName: user?.nom,
-  })
-);
 export default authSlice.reducer;
