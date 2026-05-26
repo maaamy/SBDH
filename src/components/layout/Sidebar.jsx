@@ -14,8 +14,14 @@ const Sidebar = ({ companyList, categoryList }) => {
       categoryList.map((cat) => [
         cat.nom,
         {
+          id: cat.id,
           checked: false,
-          sous_categories: Object.fromEntries(cat.sous_categories.map((scat) => [scat, false]))
+          sousCategories: Object.fromEntries(
+            cat.sousCategories.map((scat) => [
+              scat.nom,
+              { id: scat.id, checked: false }
+            ])
+          )
         }
       ])
     )
@@ -32,9 +38,13 @@ const Sidebar = ({ companyList, categoryList }) => {
       return {
         ...p,
         [cat]: {
+          ...p[cat],
           checked: newChecked,
-          sous_categories: Object.fromEntries(
-            Object.keys(p[cat].sous_categories).map((s) => [s, newChecked])
+          sousCategories: Object.fromEntries(
+            Object.entries(p[cat].sousCategories).map(([scatNom, scatVal]) => [
+              scatNom,
+              { ...scatVal, checked: newChecked }
+            ])
           )
         }
       };
@@ -42,13 +52,17 @@ const Sidebar = ({ companyList, categoryList }) => {
 
   const toggleSubCategory = (cat, sous) => {
     setCategories((p) => {
-      const newSub = { ...p[cat].sous_categories, [sous]: !p[cat].sous_categories[sous] };
-      const allChecked = Object.values(newSub).every(Boolean);
+      const newSub = {
+        ...p[cat].sousCategories,
+        [sous]: { ...p[cat].sousCategories[sous], checked: !p[cat].sousCategories[sous].checked }
+      };
+      const allChecked = Object.values(newSub).every((s) => s.checked);
       return {
         ...p,
         [cat]: {
+          ...p[cat],
           checked: allChecked,
-          sous_categories: newSub
+          sousCategories: newSub
         }
       };
     })};
@@ -108,8 +122,8 @@ const Sidebar = ({ companyList, categoryList }) => {
               <Checkbox key={cat} label={cat} checked={val.checked} onChange={() => toggleCategory(cat) } />
               
               <div key={`${cat}-sub-cat`} className="!font-normal px-7">
-                {Object.entries(val.sous_categories).map(([subCat, checked]) => (
-                  <Checkbox key={subCat} label={subCat} checked={checked} onChange={() => toggleSubCategory(cat,subCat)} />
+                {Object.entries(val.sousCategories).map(([subCat, subVal]) => (
+                  <Checkbox key={subCat} label={subCat} checked={subVal.checked} onChange={() => toggleSubCategory(cat,subCat)} />
                 ))}
               </div>
 
@@ -125,10 +139,11 @@ const Sidebar = ({ companyList, categoryList }) => {
               setEntreprises(Object.fromEntries(Object.keys(entreprises).map((k) => [k, false])));
               setCategories(
                 Object.fromEntries(
-                  Object.keys(categories).map((k) => [k, {
+                  Object.keys(categories).map(([k, val]) => [k, {
+                    ...val,
                     checked: false,
-                    sous_categories: Object.fromEntries(
-                      Object.keys(categories[k].sous_categories).map((s) => [s, false])
+                    sousCategories: Object.fromEntries(
+                      Object.entries(val.sousCategories).map(([s, sval]) => [s, { ...sval, checked: false }])
                     )
                   }])
                 )

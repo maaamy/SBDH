@@ -18,6 +18,7 @@ export default {
         grey: "#9a9999",
         beige: "#E8DFDF",
         brown : "#c4a58f",
+        cream : "#fdf8f4",
       },
       backgroundImage: {
         "backgroundImg": "url('/src/assets/background.avif')",
