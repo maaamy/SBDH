@@ -6,7 +6,7 @@ import { logout } from "../../store/slices/authSlice";
 const MENU_ITEMS = [
   { label: "Mon profil", path: "/profil-entreprise", icon: <User size={22} /> },
   { label: "Tableau de bord", path: "/tableau-de-bord-entreprise", icon: <LayoutDashboard size={22} /> },
-  { label: "Avis clients", path: "/avis", icon:<UserStar size={22} /> },
+  { label: "Avis clients", path: "/avis-clients", icon:<UserStar size={22} /> },
   { label: "Mes notifications", path: "/notifications-entreprise", icon: <Bell size={22} /> },
 ];
 

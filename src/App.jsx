@@ -24,6 +24,8 @@ import HistoriqueCommandes from './pages/HistoriqueCommandes.jsx';
 import ProfilEntreprise from './pages/ProfilEntreprise.jsx';
 import CatalogueEntreprise from './pages/CatalogueEntreprise.jsx';
 import AjoutProduit from './pages/AjoutProduit.jsx';
+import DashboardEntreprise from './pages/DashboardEntreprise.jsx';
+import AvisClients from './pages/AvisClients.jsx';
 import { fetchAppData } from './store/slices/appDataSlice.js';
 
 function App() {
@@ -82,6 +84,8 @@ function App() {
         <Route path="/profil-entreprise" element={<ProfilEntreprise/>}/>
         <Route path="/ajout-produit" element={<AjoutProduit />}/>
         <Route path="/catalogue-entreprise" element={<CatalogueEntreprise />}/>
+        <Route path="/tableau-de-bord-entreprise" element={<DashboardEntreprise />}/>
+        <Route path="/avis-clients" element={<AvisClients />} />
 
       </Route>
 

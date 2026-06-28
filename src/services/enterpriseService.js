@@ -25,3 +25,28 @@ export const addProduct = async (form, variants = null, picture = null) => {
   const res = await api.post(`${API_ENTERPRISE_URL}/add-product`, formData);
   return res.data.produit;
 };
+
+export const fetchProductsEnterprise = async (enterpriseId) => {
+  const res = await api.get(`${API_ENTERPRISE_URL}/products/${enterpriseId}`);
+  return res.data.enterprise;
+};
+
+export const deleteVariantProduct = async (variantId) => {
+  const res = await api.delete(`${API_ENTERPRISE_URL}/product/${variantId}`);
+  return res.data.enterprise;
+};
+
+export const updateVariantProduct = async (variant) => {
+    const res = await api.put(`${API_ENTERPRISE_URL}/variant/${variant.id}`, {
+        prix: variant.prix,
+        stock: variant.stock,
+        est_active: variant.est_active,
+    });
+    return res.data.variant;
+};
+
+export const fetchProductsWithAvis = async (enterpriseId) => {
+    const res = await api.get(`${API_ENTERPRISE_URL}/avis/${enterpriseId}`);
+    return res.data.products;
+};
+

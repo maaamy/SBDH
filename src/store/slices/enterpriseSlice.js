@@ -38,11 +38,62 @@ export const addProduct = createAsyncThunk(
     }
 );
 
+export const fetchProductsEnterprise = createAsyncThunk(
+    "enterprise/fetchProducts",
+    async( enterpriseId, { rejectWithValue }) => {
+         try {
+            const data = await enterpriseService.fetchProductsEnterprise(enterpriseId);
+            return data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
+export const deleteVariantProduct = createAsyncThunk(
+    "enterprise/deleteVariantProduct",
+    async( {enterpriseId, variantId}, { rejectWithValue }) => {
+         try {
+            await enterpriseService.deleteVariantProduct(variantId);
+            const data =  await enterpriseService.fetchProductsEnterprise(enterpriseId);
+            return data;
+    
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
+export const updateVariantProduct = createAsyncThunk(
+    "enterprise/updateVariantProduct",
+    async (variant, { rejectWithValue }) => {
+        try {
+            const data = await enterpriseService.updateVariantProduct(variant);
+            return data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
+export const fetchProductsWithAvis = createAsyncThunk(
+    "enterprise/fetchProductsWithAvis",
+    async (enterpriseId, { rejectWithValue }) => {
+        try {
+            const data = await enterpriseService.fetchProductsWithAvis(enterpriseId);
+            return data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
 const enterpriseSlice = createSlice({
     name:"enterprise",
     initialState: {
         profile : null,
-        products: null,
+        products: [],
+        productsWithAvis: [],
         isLoading : true,
         error: null
     },
@@ -85,6 +136,59 @@ const enterpriseSlice = createSlice({
                 state.error = payload;
             })
             .addCase(addProduct.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(fetchProductsEnterprise.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.products = payload.products;
+            })
+            .addCase(fetchProductsEnterprise.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(fetchProductsEnterprise.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(deleteVariantProduct.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.products = payload.products;
+            })
+            .addCase(deleteVariantProduct.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(deleteVariantProduct.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(updateVariantProduct.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.products = state.products.map((p) => ({
+                    ...p,
+                    Variante_produit: p.Variante_produit.map((v) =>
+                        v.id === payload.id ? { ...v, prix: payload.prix, stock: payload.stock, est_active: payload.est_active } : v
+                    ),
+                }));
+            })
+            .addCase(updateVariantProduct.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(updateVariantProduct.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(fetchProductsWithAvis.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.productsWithAvis = payload;
+            })
+            .addCase(fetchProductsWithAvis.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(fetchProductsWithAvis.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
             });
