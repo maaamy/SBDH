@@ -30,18 +30,43 @@ const customerSlice = createSlice({
     name:"customer",
     initialState: {
         profil : null,
+        cartCount: 0,
+        notifCount: 0,
         isLoading : true,
         error: null
+    },
+    reducers: {
+        setCartCount: (state, { payload }) => {
+            state.cartCount = payload;
+        },
+        setNotifCount: (state, { payload }) => {
+            state.notifCount = payload;
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(logout.fulfilled, (state) => {
                 state.isLoading = false;
                 state.profil = null;
+                state.cartCount = 0;
+                state.notifCount = 0;
             })
             .addCase(fetchCustomer.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.profil = {id: payload.login_id, nom: payload.nom, prenom: payload.prenom, email: payload.email, dateNaissance: payload.date_naissance, telephone: payload.telephone, adresse: payload.adresse, adresse2: payload.adresse2, ville: payload.ville, codePostal: payload.code_postal, pays: payload.pays};
+                state.profil = {
+                    id: payload.login_id,
+                    clientId: payload.id,
+                    nom: payload.nom,
+                    prenom: payload.prenom,
+                    email: payload.email,
+                    dateNaissance: payload.date_naissance,
+                    telephone: payload.telephone,
+                    adresse: payload.adresse,
+                    adresse2: payload.adresse2,
+                    ville: payload.ville,
+                    codePostal: payload.code_postal,
+                    pays: payload.pays
+                };
             })
             .addCase(fetchCustomer.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -53,7 +78,20 @@ const customerSlice = createSlice({
             })
             .addCase(updateCustomerProfile.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.profil = {id: payload.login_id, nom: payload.nom, prenom: payload.prenom, email: payload.email, dateNaissance: payload.date_naissance, telephone: payload.telephone, adresse: payload.adresse, adresse2: payload.adresse2, ville: payload.ville, codePostal: payload.code_postal, pays: payload.pays};
+                state.profil = {
+                    id: payload.login_id,
+                    clientId: payload.id,
+                    nom: payload.nom,
+                    prenom: payload.prenom,
+                    email: payload.email,
+                    dateNaissance: payload.date_naissance,
+                    telephone: payload.telephone,
+                    adresse: payload.adresse,
+                    adresse2: payload.adresse2,
+                    ville: payload.ville,
+                    codePostal: payload.code_postal,
+                    pays: payload.pays
+                };
             })
             .addCase(updateCustomerProfile.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -67,6 +105,7 @@ const customerSlice = createSlice({
     }
 });
 
+export const { setCartCount, setNotifCount } = customerSlice.actions;
 export const selectCustomer = (state) => state.customer;
 
 export default customerSlice.reducer;

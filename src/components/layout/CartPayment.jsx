@@ -1,7 +1,37 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectCustomer, setCartCount } from "../../store/slices/customerSlice";
+import * as customerService from "../../services/customerService";
 
-const CartPayment = () => {
+const CartPayment = ({ cartItems, total }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { profil } = useSelector(selectCustomer);
   const [method, setMethod] = useState("Paypal");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handlePay = async () => {
+    if (!profil?.clientId || !cartItems?.length) return;
+    setLoading(true);
+    setError(null);
+    try {
+      await customerService.createOrder(
+        profil.clientId,
+        cartItems,
+        total,
+        profil.adresse ?? ""
+      );
+      dispatch(setCartCount(0));
+      navigate("/commandes");
+    } catch (err) {
+      setError("Erreur lors de la commande, veuillez réessayer.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl overflow-hidden w-80">
 
@@ -81,14 +111,20 @@ const CartPayment = () => {
         ))}
 
       </div>
+
+      {error && <p className="normalText text-red-500 px-4">{error}</p>}
+
        <p className="text-xs text-black mt-4 font-semibold px-4 mb-4">
        En passant cette commande, vous acceptez les Conditions générales, la Répartition des obligations et la Politique de confidentialité.
       </p> 
       
-      <button className="w-full bg-color-button font-bold text-white py-3 rounded-b-2xl hover:bg-button-hover transition">
-        Payer
+      <button
+        onClick={handlePay}
+        disabled={loading}
+        className="w-full bg-color-button font-bold text-white py-3 rounded-b-2xl hover:bg-button-hover transition disabled:opacity-50"
+      >
+        {loading ? "Commande en cours..." : "Payer"}
       </button>
-
     </div>
   );
 };

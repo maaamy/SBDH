@@ -12,7 +12,13 @@ const CartItem = ({ item, onUpdate, onRemove }) => {
 
       <div className="bg-white/40 w-full lg:flex-1 min-w-0 rounded-3xl py-2 px-3">
         <p className="text-product productTitle text-center lg:text-left truncate">{item.nom}</p>
-        <p className="normalText font-bold text-color-button text-center lg:text-left truncate">Nom de l'entreprise</p>
+        <div className="flex flex-wrap gap-1">
+          {item.attributes?.map((att) => (
+            <p key={att.Valeur_attribut.id} className="normalText text-color-button">
+              {att.Valeur_attribut.Attribut.nom} : {att.Valeur_attribut.nom}
+            </p>
+          ))}
+        </div>
         <p className="text-black mt-1 font-bold text-button text-center lg:text-left">
           {item.prix.toFixed(2)} €
         </p>
@@ -20,16 +26,16 @@ const CartItem = ({ item, onUpdate, onRemove }) => {
 
       <div className="flex flex-row lg:flex-col items-center gap-4 lg:gap-3 flex-shrink-0">
         <div className="flex items-center gap-2 border border-product font-bold rounded-full px-2 py-1">
-          <button onClick={() => onUpdate(item.id, item.quantite - 1)}>
+          <button onClick={() => onUpdate(item.cartItemId, item.quantity - 1)}>
             <Minus size={14} />
           </button>
-          <span className="w-6 text-center">{item.quantite}</span>
-          <button onClick={() => onUpdate(item.id, item.quantite + 1)}>
+          <span className="w-6 text-center">{item.quantity}</span>
+          <button onClick={() => onUpdate(item.cartItemId, item.quantity + 1)}>
             <Plus size={14} />
           </button>
         </div>
         <button 
-          onClick={() => onRemove(item.id)} 
+          onClick={() => onRemove(item.cartItemId)}
           className="text-color-button hover:text-red-500">
           <Trash2 size={18} />
         </button>

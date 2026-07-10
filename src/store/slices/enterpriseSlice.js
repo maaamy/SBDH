@@ -94,14 +94,21 @@ const enterpriseSlice = createSlice({
         profile : null,
         products: [],
         productsWithAvis: [],
+        notifCount: 0,
         isLoading : true,
         error: null
+    },
+    reducers: {
+        setNotifCount: (state, { payload }) => {
+            state.notifCount = payload;
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(logout.fulfilled, (state) => {
                 state.isLoading = false;
                 state.profile = null;
+                state.notifCount = 0;
             })
             .addCase(fetchEnterprise.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
@@ -195,6 +202,7 @@ const enterpriseSlice = createSlice({
     }
 });
 
+export const { setNotifCount } = enterpriseSlice.actions;
 export const selectEnterprise = (state) => state.enterprise;
 
 export default enterpriseSlice.reducer;

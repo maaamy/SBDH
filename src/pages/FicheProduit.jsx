@@ -1,29 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { ShoppingCart } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { ShoppingCart, Star } from "lucide-react";
 import Banner from "../components/layout/Banner";
 import CustomerNavigation from "../components/layout/CustomerNavigation";
 import Footer from "../components/layout/Footer";
-import { selectCustomer } from "../store/slices/customerSlice";
+import { selectCustomer, setCartCount } from "../store/slices/customerSlice";
 import * as customerService from "../services/customerService";
 import Casque from "../assets/Casque.jpg";
 
-const AVIS_MOCK = [
-    { id: 1, nom: "Ella", commentaire: "Très bon produit! je recommande." },
-    { id: 2, nom: "Alain", commentaire: "Livraison rapide et aucun soucis." },
-    { id: 3, nom: "Georges", commentaire: "Conforme à la description." },
-];
-
 const FicheProduit = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { id } = useParams();
-    const { profil } = useSelector(selectCustomer);
+    const { profil, cartCount } = useSelector(selectCustomer);
 
     const [product, setProduct] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [avis, setAvis] = useState("");
+    const [reviews, setReviews] = useState([]);
+    const [comment, setComment] = useState("");
+    const [note, setNote] = useState(5);
+    const [addingToCart, setAddingToCart] = useState(false);
+    const [cartSuccess, setCartSuccess] = useState(false);
+    const [sendingReview, setSendingReview] = useState(false);
+    const [reviewSuccess, setReviewSuccess] = useState(false);
 
     useEffect(() => {
         customerService.fetchProductById(id)
@@ -32,7 +33,44 @@ const FicheProduit = () => {
                 setSelectedVariant(data.Variante_produit?.[0] ?? null);
             })
             .finally(() => setIsLoading(false));
+
+        customerService.fetchReviews(id).then(setReviews);
     }, [id]);
+
+    const handleAddToCart = async () => {
+        if (!profil?.clientId || !selectedVariant) return;
+        setAddingToCart(true);
+        try {
+            await customerService.addToCart(profil.clientId, selectedVariant.id, 1);
+            dispatch(setCartCount(cartCount + 1));
+            setCartSuccess(true);
+            setTimeout(() => setCartSuccess(false), 2000);
+        } catch (err) {
+            console.error("Error adding to cart", err);
+        } finally {
+            setAddingToCart(false);
+        }
+    };
+
+    const handleSendReview = async () => {
+        if (!profil?.clientId || !comment.trim()) return;
+        setSendingReview(true);
+        try {
+            const newReview = await customerService.addReview(profil.clientId, id, comment, note);
+            setReviews((prev) => [{
+                ...newReview,
+                Client: { nom: profil.nom, prenom: profil.prenom }
+            }, ...prev]);
+            setComment("");
+            setNote(5);
+            setReviewSuccess(true);
+            setTimeout(() => setReviewSuccess(false), 2000);
+        } catch (err) {
+            console.error("Error sending review", err);
+        } finally {
+            setSendingReview(false);
+        }
+    };
 
     const getStockLabel = (stock) => {
         if (stock === 0) return { label: "Rupture de stock", color: "text-red-500" };
@@ -61,10 +99,11 @@ const FicheProduit = () => {
                             Retour
                         </button>
                         <button className="buttonText h-12 px-8 bg-color-button text-white rounded-2xl hover:bg-button-hover active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
-                            disabled={selectedVariant.stock === 0}
+                            disabled={selectedVariant.stock === 0 || addingToCart}
+                            onClick={handleAddToCart}
                         >
                             <ShoppingCart size={18} />
-                            Ajouter au panier
+                            {cartSuccess ? "Ajouté !" : addingToCart ? "Ajout..." : "Ajouter au panier"}
                         </button>
                     </div>
 
@@ -132,35 +171,77 @@ const FicheProduit = () => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <p className="secondaryTitleText text-color-button">Les avis</p>
+                        <p className="secondaryTitleText text-color-button">Les avis ({reviews.length})</p>
                         <div className="border border-color-button rounded-2xl p-4 flex flex-col gap-4">
-                            {AVIS_MOCK.map((a) => (
-                                <div key={a.id} className="flex flex-col gap-1">
-                                    <p className="normalText font-bold text-product">{a.nom}</p>
-                                    <p className="normalText text-black">{a.commentaire}</p>
-                                </div>
-                            ))}
+                            {reviews.length === 0 ? (
+                                <p className="normalText text-grey text-center py-4">Aucun avis pour ce produit.</p>
+                            ) : (
+                                reviews.map((r) => (
+                                    <div key={r.id} className="flex flex-col gap-1 border-b border-beige pb-3 last:border-0 last:pb-0">
+                                        <div className="flex items-center justify-between">
+                                            <p className="normalText font-bold text-product">
+                                                {r.Client?.prenom} {r.Client?.nom}
+                                            </p>
+                                            <p className="normalText text-grey">
+                                                {new Date(r.created_at).toLocaleDateString("fr-FR", {
+                                                    day: "numeric", month: "long", year: "numeric"
+                                                })}
+                                            </p>
+                                        </div>
+                                        {r.note && (
+                                            <div className="flex gap-1">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <Star
+                                                        key={star}
+                                                        size={16}
+                                                        className={star <= r.note ? "text-color-button fill-color-button" : "text-grey"}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                        <p className="normalText text-black">{r.commentaire}</p>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        <p className="secondaryTitleText text-color-button">Votre avis</p>
-                        <div className="flex gap-4 items-end flex-wrap">
-                            <textarea
-                                value={avis}
-                                onChange={(e) => setAvis(e.target.value)}
-                                rows={3}
-                                className="flex-1 min-w-60 border border-color-button rounded-2xl p-4 normalText text-black focus:outline-none focus:ring-2 focus:ring-color-button resize-none"
-                                placeholder="Partagez votre expérience..."
-                            />
-                            <button
-                                onClick={() => setAvis("")}
-                                className="buttonText h-14 px-8 bg-color-button text-white rounded-2xl hover:bg-button-hover active:scale-95 transition-all"
-                            >
-                                Envoyer
-                            </button>
+                    {profil && (
+                        <div className="flex flex-col gap-3">
+                            <p className="secondaryTitleText text-color-button">Votre avis</p>
+
+                            <div className="flex items-center gap-2">
+                                <p className="normalText text-black">Note :</p>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setNote(star)}
+                                    >
+                                        <Star
+                                            size={24}
+                                            className={star <= note ? "text-color-button fill-color-button" : "text-grey"}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="flex gap-4 items-end flex-wrap">
+                                <textarea
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    rows={3}
+                                    className="flex-1 min-w-60 border border-color-button rounded-2xl p-4 normalText text-black focus:outline-none focus:ring-2 focus:ring-color-button resize-none"
+                                    placeholder="Partagez votre expérience..."
+                                />
+                                <button
+                                    onClick={handleSendReview}
+                                    disabled={sendingReview || !comment.trim()}
+                                    className="buttonText h-14 px-8 bg-color-button text-white rounded-2xl hover:bg-button-hover active:scale-95 transition-all disabled:opacity-50"
+                                >
+                                    {reviewSuccess ? "Envoyé !" : sendingReview ? "Envoi..." : "Envoyer"}
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                 </div>
             </main>
