@@ -46,7 +46,7 @@ const PageInscriptionEntreprise = () => {
       }
       const result = await dispatch(inscriptionEntreprise(form));
       if (inscriptionEntreprise.fulfilled.match(result)) {
-        navigate("/"); 
+        navigate("/catalogue-entreprise"); 
       }
   };
 

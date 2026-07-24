@@ -6,7 +6,6 @@ import EnterpriseNavigation from "../components/layout/EnterpriseNavigation";
 import EnterpriseProfileMenu from "../components/layout/EnterpriseProfileMenu";
 import Footer from "../components/layout/Footer";
 import Banner from "../components/layout/Banner";
-import FormInput from "../components/ui/FormInput";
 import SelectInput from "../components/ui/SelectInput";
 import TextAreaInput from "../components/ui/TextAreaInput";
 import MultipleAddSelection from "../components/MultipleAddSelection";
@@ -19,7 +18,7 @@ const AjoutProduit = () => {
     const dispatch = useDispatch();
 
     const { profile } = useSelector(selectEnterprise);
-    const { categories, attributes } = useSelector((state) => state.appData);
+    const { categories, attributes, brands } = useSelector((state) => state.appData);
 
     const fileInputRef = useRef(null);
 
@@ -29,7 +28,8 @@ const AjoutProduit = () => {
         nom: "",
         description: "",
         categorie: "",
-        sousCategorie:""
+        sousCategorie: "",
+        marque: "",
     });
     const [photoPreview, setPhotoPreview] = useState(null);
     const [photoFile, setPhotoFile] = useState(null);
@@ -170,7 +170,15 @@ const AjoutProduit = () => {
                                             disabled= { form.categorie=== ""} 
                                         />
                                     </div>
-
+                                    <div className="flex-1">
+                                        <SelectInput
+                                            label="Marque (optionnel)"
+                                            options={brands}
+                                            value={form.marque}
+                                            onChange={(val) => setForm((prev) => ({ ...prev, marque: val }))}
+                                            placeholder="Choisir une marque"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 

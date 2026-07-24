@@ -131,6 +131,11 @@ const FicheProduit = () => {
                                 <p className="secondaryTitleText text-color-button">
                                     Catégorie : {product.Categorie?.nom}
                                 </p>
+                                {product.Marque?.nom && (
+                                    <p className="secondaryTitleText text-color-button">
+                                        Marque : {product.Marque.nom}
+                                    </p>
+                                )}
                                 <p className={`normalText font-bold ${stockInfo.color}`}>{stockInfo.label}</p>
                             </div>
 

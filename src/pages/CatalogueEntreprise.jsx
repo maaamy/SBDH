@@ -5,10 +5,12 @@ import EnterpriseNavigation from "../components/layout/EnterpriseNavigation";
 import EnterpriseProfileMenu from "../components/layout/EnterpriseProfileMenu";
 import Footer from "../components/layout/Footer";
 import TableLineProduct from "../components/products/TableLineProduct";
+import ProductLine from "../components/products/ProductLine";
 import Banner from "../components/layout/Banner";
 import SearchBar from "../components/ui/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
-import { selectEnterprise, fetchProductsEnterprise, deleteVariantProduct, updateVariantProduct } from "../store/slices/enterpriseSlice";
+import { selectEnterprise, fetchProductsEnterprise, deleteVariantProduct, updateVariantProduct, toggleProductActive, addVariantToProduct } from "../store/slices/enterpriseSlice";
+import AddVariantModal from "../components/products/AddVariantModal";
 
 const computeStatus = (stock, isActive) => {
     if (!isActive) return "Non actif";
@@ -26,12 +28,18 @@ const CatalogueEntreprise = () => {
     const [search, setSearch] = useState("");
     const [stockFilter, setStockFilter] = useState("Tous");
     const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+    const [expandedProducts, setExpandedProducts] = useState({});
+    const [modalProduct, setModalProduct] = useState(null);
 
     useEffect(() => {
         if (profile?.id) {
             dispatch(fetchProductsEnterprise(profile.id));
         }
     }, []);
+
+    const toggleProduct = (productId) => {
+        setExpandedProducts((prev) => ({ ...prev, [productId]: !prev[productId] }));
+    };
 
     const filteredProducts = products
         .map((p) => {
@@ -44,7 +52,6 @@ const CatalogueEntreprise = () => {
 
             return {
                 ...p,
-                nom: p.nom,
                 categorie: p.Categorie,
                 image: p.Image_produit,
                 filteredVariants,
@@ -58,7 +65,25 @@ const CatalogueEntreprise = () => {
         }
     };
 
-    if (loading) return <p>Chargement...</p>;
+    const handleToggleActive = (productId, isActive) => {
+        dispatch(toggleProductActive({ productId, isActive }));
+    };
+
+    const handleAddVariant = (productId) => {
+        const product = products.find((p) => p.id === productId);
+        setModalProduct(product);
+    };
+
+    const handleConfirmAddVariant = (variant) => {
+        dispatch(addVariantToProduct({
+            productId: modalProduct.id,
+            variant,
+            enterpriseId: profile.id,
+        }));
+        setModalProduct(null);
+    };
+
+    if (loading || !profile) return <p>Chargement...</p>;
 
     return (
         <div className="flex flex-col min-h-screen w-full bg-backgroundImg bg-cover bg-center">
@@ -120,12 +145,11 @@ const CatalogueEntreprise = () => {
 
                     </div>
 
-                    <div className="bg-color-button/50 grid grid-cols-[1fr_3.5fr_1.25fr_1.1fr_1fr_1fr_3fr] gap-3 items-center px-3 py-4 rounded-xl shadow">
-                        {["Image", "Nom du produit", "Prix", "Statut", "Stock", "Actif", "Actions"].map((col) => (
+                    <div className="bg-color-button/50 grid grid-cols-[2rem_1fr_3.5fr_1.25fr_1.1fr_1fr_1fr_3fr] gap-3 items-center px-3 py-4 rounded-xl shadow">
+                        {["", "Image", "Nom / Attributs", "Prix", "Statut", "Stock", "Actif", "Actions"].map((col) => (
                           <p key={col} className="secondaryTitleText text-white text-center">{col}</p>
                         ))}
                     </div>
-                    
 
                     <div className="flex flex-col gap-3 pb-6">
                         {filteredProducts.length === 0 ? (
@@ -133,26 +157,47 @@ const CatalogueEntreprise = () => {
                                 <p className="secondaryTitleText text-grey">Aucun produit trouvé</p>
                             </div>
                         ) : (
-                            filteredProducts.map((p) =>
-                                p.filteredVariants.map((variant) => (
-                                    <TableLineProduct
-                                        key={variant.id}
-                                        variantProduct={{
-                                            ...variant,
-                                            nom: p.nom,
-                                            categorie: p.categorie,
-                                            image: p.image,
-                                        }}
-                                        onChange={(updatedVariant) => dispatch(updateVariantProduct(updatedVariant))}
-                                        onDelete={handleDelete}
+                            filteredProducts.map((p) => (
+                                <div key={p.id} className="flex flex-col rounded-2xl overflow-hidden shadow-sm">
+                                    <ProductLine
+                                        p={p}
+                                        isExpanded={expandedProducts[p.id]}
+                                        onToggle={() => toggleProduct(p.id)}
+                                        onToggleActive={handleToggleActive}
+                                        onAddVariant={() => handleAddVariant(p.id)}
                                     />
-                                ))
-                            )
+                                    {expandedProducts[p.id] && (
+                                        <div className="flex flex-col">
+                                            {p.filteredVariants.map((variant) => (
+                                                <TableLineProduct
+                                                    key={variant.id}
+                                                    variantProduct={{
+                                                        ...variant,
+                                                        nom: p.nom,
+                                                        categorie: p.categorie,
+                                                        image: p.image,
+                                                    }}
+                                                    onChange={(updatedVariant) => dispatch(updateVariantProduct(updatedVariant))}
+                                                    onDelete={handleDelete}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))
                         )}
                     </div>
 
                 </section>
             </main>
+
+            {modalProduct && (
+                <AddVariantModal
+                    product={modalProduct}
+                    onClose={() => setModalProduct(null)}
+                    onAdd={handleConfirmAddVariant}
+                />
+            )}
 
             <Footer />
         </div>

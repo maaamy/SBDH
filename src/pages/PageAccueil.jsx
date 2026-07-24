@@ -6,17 +6,21 @@ import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
 import { Home } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectUser } from "../store/slices/authSlice";
 import * as customerService from "../services/customerService";
 
 const NAV_LIST = [
   { label: "Accueil", path: "/", icon: <Home size={28} /> },
-  { label: "A propos", path: "#" },
+  { label: "A propos", path: "/apropos" },
   { label: "S'inscrire", path: "/inscription" },
   { label: "Se connecter", path: "/connexion" },
 ];
 
 
 const PageAccueil = () => {
+  const navigate = useNavigate();
+  const user = useSelector(selectUser);
   const { categories, loading } = useSelector((state) => state.appData);
 
   const [products, setProducts] = useState([]);
@@ -29,6 +33,11 @@ const PageAccueil = () => {
       .then(setProducts)
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (user?.type === "client") navigate("/catalogue");
+    if (user?.type === "entreprise") navigate("/catalogue-entreprise");
+  }, [user]);
 
   const filteredProducts = products.filter((p) => {
     const searchMatches = p.nom.toLowerCase().includes(search.toLowerCase());

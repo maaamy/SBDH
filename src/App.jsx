@@ -30,6 +30,8 @@ import FicheProduit from './pages/FicheProduit.jsx';
 import CommandesEntreprise from './pages/CommandesEntreprise.jsx';
 import NotificationsClient from './pages/NotificationsClient.jsx';
 import NotificationsEntreprise from './pages/NotificationsEntreprise.jsx';
+import APropos from './pages/APropos.jsx';
+import Contact from './pages/Contact.jsx';
 import { fetchAppData } from './store/slices/appDataSlice.js';
 import * as customerService from './services/customerService.js';
 import * as enterpriseService from './services/enterpriseService.js';
@@ -93,6 +95,8 @@ function App() {
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
 
       <Route path="/produit/:id" element={<FicheProduit />} />
+      <Route path="/apropos" element={<APropos />} />
+      <Route path="/contact" element={<Contact />} />
 
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "../../services/authService";
 import { fetchCustomer } from "./customerSlice";
-
+import { fetchEnterprise } from "./enterpriseSlice";
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', 
   async (_, { rejectWithValue }) => {
@@ -46,7 +46,7 @@ export const inscriptionEntreprise = createAsyncThunk(
   async (formData, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.inscriptionEntreprise(formData);
-      //dispatch(fetchEnterprise(data.user_id));
+      dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -59,7 +59,7 @@ export const connexionEntreprise = createAsyncThunk(
   async ({ email, siret, mdp }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionEntreprise({ email, siret, mdp });
-      //dispatch(fetchEnterprise(data.user_id));
+      dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -86,7 +86,7 @@ export const connexionEntrepriseGoogle = createAsyncThunk(
   async ({ token, siret }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionEntrepriseGoogle({ token, siret });
-      //dispatch(fetchEnterprise(data.user_id));
+      dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);

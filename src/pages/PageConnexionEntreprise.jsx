@@ -36,7 +36,7 @@ const PageConnexionEntreprise = () => {
     }
     const result = await dispatch(connexionEntreprise(form));
     if (connexionEntreprise.fulfilled.match(result)) {
-      navigate("/"); 
+      navigate("/catalogue-entreprise"); 
     }
   };
 
