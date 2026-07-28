@@ -1,75 +1,86 @@
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { Info } from "lucide-react";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import CustomerNavigation from "../components/layout/CustomerNavigation";
 import CustomerProfileMenu from "../components/layout/CustomerProfileMenu";
 import Footer from "../components/layout/Footer";
 import Banner from "../components/layout/Banner";
-import BagMoney from "../assets/BagMoney.png";
-import LoopStat from "../assets/LoopStat.png";
-import ProductRow from "../components/products/ProductRow";
 import SectionCard from "../components/ui/SectionCard";
 import PromotionCard from "../components/PromotionCard";
+import CustomerKPICards from "../components/dashboard/CustomerKPICards";
+import CustomerHabits from "../components/dashboard/CustomerHabits";
+import OrderSummaryCards from "../components/dashboard/OrderSummaryCards";
+import MonthlySpendingChart from "../components/dashboard/MonthlySpendingChart";
+import OrdersPieChart from "../components/dashboard/OrdersPieChart";
+import TopEnterprisesChart from "../components/dashboard/TopEnterprisesChart";
+import ProductRow from "../components/products/ProductRow";
 import { selectCustomer } from "../store/slices/customerSlice";
-
-const STATS = { commandes: 8, depenses: "1 045 €" };
-
-const HABITUDES = [
-  { texte: "Vous achetez principalement des produits de ", bold: "Mode" },
-  { texte: "60 % de vos achats sont payés via ", bold: "PayPal" },
-  { texte: "Votre commande la plus élevée s'élève à ", bold: "453 €" },
-  { texte: "Fréquence d'achat : ", bold: "2 commandes / mois" },
-];
-
-const PROMOTIONS = [
-  { remise: "-15 %", description: "sur la catégorie Mode" },
-  { remise: "-100 €", description: "Dès 700 € d'achat" },
-  { remise: "-15 %", description: "sur la catégorie Mode" },
-  { remise: "-10 %", description: "sur votre prochain achat" },
-];
-
-const PRODUITS_TENDANCES = [
-  { id: 1, nom: "Test texte d'ancrage", prix: 25.99 },
-  { id: 2, nom: "Test texte d'ancrage", prix: 25.99 },
-];
-
-const PRODUITS_RECOMMANDATIONS = [
-  { id: 3, nom: "Test texte d'ancrage", prix: 25.99 },
-  { id: 4, nom: "Test texte d'ancrage", prix: 25.99 },
-];
+import {
+    selectCustomerDashboard, fetchDashboard, fetchRecommendations,
+    fetchTrending, fetchHistory } from "../store/slices/customerDashboardSlice";
 
 const DashboardClient = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {profil} = useSelector(selectCustomer);
 
-  const [cart, setCart] = useState([]);
-  
-    const handleAddToCart = (product) => {
-      setCart((prev) => {
-        const existing = prev.find((p) => p.id === product.id);
-  
-        if (existing) {
-          return prev.map((p) =>
-            p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
-          );
-        }
-  
-        return [...prev, { ...product, quantity: 1 }];
-      });
-    };
+  const {
+    dashboard,
+    recommendations,
+    trending,
+    history,
+    loading,
+    error,
+  } = useSelector(selectCustomerDashboard);
 
+  useEffect(() => {
+    if (!profil?.clientId) return;
+    dispatch(fetchDashboard(profil.clientId));
+    dispatch(fetchRecommendations(profil.clientId));
+    dispatch(fetchTrending());
+    dispatch(fetchHistory(profil.clientId));
+  }, [dispatch, profil?.clientId]);
+
+  const ordersStatusFromHistory = useMemo(() => {
+    if (!history?.length) return [];
+    const map = {};
+    history.forEach((h) => {
+      const statut = h.statut_commande;
+      if (!map[statut]) map[statut] = { statut_commande: statut, nb_commandes: new Set() };
+      map[statut].nb_commandes.add(h.commande_id);
+    });
+    return Object.values(map).map((item) => ({
+      statut_commande: item.statut_commande,
+      nb_commandes: item.nb_commandes.size,
+    }));
+  }, [history]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <h2 className="titleText text-color-button">Chargement du tableau de bord...</h2>
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-red-100 border border-red-300 rounded-xl p-6">
+          <h2 className="secondaryTitleText text-red-700">Une erreur est survenue</h2>
+          <p className="normalText text-red-500 mt-2">{JSON.stringify(error)}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-backgroundImg bg-cover bg-center">
         <Banner />
 
-        <CustomerNavigation cartCount={cart.reduce((acc, p) => acc + p.quantity, 0)} customer={{ nom: profil.nom }}/>
+        <CustomerNavigation customer={{ nom: profil?.nom }}/>
 
         <main className="flex items-start gap-0 p-4 w-full flex-1">
 
-            <CustomerProfileMenu customer = {{nom: profil.nom, prenom: profil.prenom, email: profil.email}} />
+            <CustomerProfileMenu customer={{nom: profil?.nom, prenom: profil?.prenom, email: profil?.email}} />
 
             <section className="flex-1 flex flex-col gap-5 px-6 overflow-hidden min-w-0">
 
@@ -82,94 +93,94 @@ const DashboardClient = () => {
                         <div className="flex gap-5 flex-wrap">
 
                             <SectionCard title="Commandes et dépenses" className="flex-1 min-w-[300px]">
-
-                                <div className="flex items-center gap-4 mt-2">
-                                    <div className="w-24 h-24 bg-button/10 rounded-full flex items-center justify-center shrink-0 text-4xl">
-                                        <img src={BagMoney} alt="bag money" />
-                                    </div>
-                                    <div className="flex-1 grid grid-cols-2 border border-beige">
-                                        <div className="flex items-center justify-center p-4 border border-beige">
-                                            <span className="titleText text-black">{STATS.commandes}</span>
-                                        </div>
-                                        <div className="flex items-center justify-center p-4 border border-beige">
-                                            <span className="titleText text-black">{STATS.depenses}</span>
-                                        </div>
-                                        <div className="flex items-center justify-center p-4 border border-beige">
-                                            <span className="secondaryTitleText text-black text-center">Commandes</span>
-                                        </div>
-                                        <div className="flex items-center justify-center p-4 border border-beige">
-                                            <span className="secondaryTitleText text-black text-center">Dépensés</span>
-                                        </div>
-                                    </div>
+                              <CustomerKPICards dashboard={dashboard} />
+                              <div className="grid grid-cols-2 gap-3 mt-4">
+                                <div className="bg-beige rounded-xl p-3">
+                                  <p className="normalText text-button-hover">Panier moyen</p>
+                                  <p className="secondaryTitleText text-color-button">{dashboard?.panier_moyen ?? 0} €</p>
                                 </div>
-
-                                <div className="flex justify-center mt-5">
-                                    <button
-                                        onClick={() => navigate("/statistiques")}
-                                        className="buttonText h-14 px-8 bg-color-button text-white rounded-2xl hover:bg-button-hover transition-all"
-                                    >
-                                        Voir les statistiques
-                                    </button>
+                                <div className="bg-beige rounded-xl p-3">
+                                  <p className="normalText text-button-hover">Première commande</p>
+                                  <p className="secondaryTitleText text-black">
+                                    {dashboard?.premiere_commande
+                                    ? new Date(dashboard.premiere_commande).toLocaleDateString("fr-FR")
+                                    : "-"}
+                                  </p>
                                 </div>
-
+                                <div className="bg-beige rounded-xl p-3">
+                                  <p className="normalText text-button-hover">Dernière commande</p>
+                                  <p className="secondaryTitleText text-black">
+                                    {dashboard?.derniere_commande
+                                    ? new Date(dashboard.derniere_commande).toLocaleDateString("fr-FR")
+                                    : "-"}
+                                  </p>
+                                </div>
+                                <div className="bg-beige rounded-xl p-3">
+                                  <p className="normalText text-button-hover">Nb entreprises</p>
+                                  <p className="secondaryTitleText text-color-button">{dashboard?.nb_entreprises ?? 0}</p>
+                                </div>
+                              </div>
                             </SectionCard>
 
                
                             <SectionCard title="Analyse des habitudes" className="flex-1 min-w-[300px]">
-
-                                <div className="flex items-start gap-4 mt-2">
-                                    <div className="flex-1 bg-white/20 p-3 rounded flex flex-col gap-2">
-                                        {HABITUDES.map((h, i) => (
-                                            <p key={i} className="normalText text-black">
-                                            {h.texte}<span className="font-bold">{h.bold}</span>
-                                            </p>
-                                        ))}
-                                    </div>
-                                    <div className="w-20 h-20 shrink-0 flex items-center justify-center text-3xl">
-                                        <img src={LoopStat} alt="loop stat" />
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-center mt-5">
-                                    <button
-                                        onClick={() => navigate("/statistiques")}
-                                        className="buttonText h-14 px-8 bg-color-button text-white rounded-2xl hover:bg-button-hover transition-all"
-                                    >
-                                        Voir les statistiques
-                                    </button>
-                                </div>
-
+                              <CustomerHabits dashboard={dashboard} />
                             </SectionCard>
-
                         </div>
 
-              
-                        <SectionCard title="Tendances">
-                                <ProductRow title="Les produits les plus populaires" products={PRODUITS_TENDANCES} onAddToCart={handleAddToCart} withBorder={false}/>
+                        <SectionCard title="Résumé commandes">
+                          <OrderSummaryCards history={history} />
                         </SectionCard>
 
-                        <SectionCard title="Recommandations" >
-                            <ProductRow title="Les produits que vous aimez, réunis en un seul endroit" products={PRODUITS_RECOMMANDATIONS} onAddToCart={handleAddToCart} withBorder={false} />
+                        <div className="flex gap-5 flex-wrap">
+                          <SectionCard title="Dépenses par mois" className="flex-1 min-w-[300px]">
+                            <MonthlySpendingChart history={history} />
+                          </SectionCard>
+                          <SectionCard title="Statut des commandes" className="flex-1 min-w-[300px]">
+                            <OrdersPieChart ordersStatus={ordersStatusFromHistory} />
+                          </SectionCard>
+                        </div>
+
+                        <SectionCard title="Où vous dépensez le plus">
+                          <TopEnterprisesChart history={history} />
+                        </SectionCard>
+
+                        <SectionCard title="Recommandations">
+                          {!recommendations?.length ? (
+                            <p className="normalText text-grey p-4">Aucune recommandation disponible.</p>
+                          ) : (
+                            <ProductRow
+                              title=""
+                              products={recommendations}
+                              withBorder={false}
+                              showVoirPlus={false}
+                            />
+                          )}
+                        </SectionCard>
+
+                        <SectionCard title="Tendances">
+                          {!trending?.length ? (
+                            <p className="normalText text-grey p-4">Aucune tendance disponible.</p>
+                          ) : (
+                            <ProductRow
+                              title=""
+                              products={trending}
+                              withBorder={false}
+                              showVoirPlus={false}
+
+                            />
+                          )}
                         </SectionCard>
 
                     </div>
 
                     <div className="bg-bg rounded-3xl flex flex-col overflow-hidden w-56 shrink-0">
-                        <div className="bg-color-button px-6 py-3 w-full text-center">
+                        <div className="bg-color-button px-6 py-3 text-center">
                             <span className="titleText text-white">Promotions</span>
                         </div>
-                        
-                        <div className="flex flex-col gap-4 p-4">
-                        
-                            {PROMOTIONS.map((promo, i) => (
-                                <PromotionCard
-                                    key={i}
-                                    discount={promo.remise}
-                                    description={promo.description}
-                                    onUse={() => console.log("Promo utilisée :", promo.remise)}
-                                />
-                            ))}
-
+                        <div className="p-4 flex flex-col gap-4">
+                            <PromotionCard discount="10%" description="Réduction sur votre prochaine commande" />
+                            <PromotionCard discount="15%" description="Offre fidélité" />
                         </div>
                     </div>
 

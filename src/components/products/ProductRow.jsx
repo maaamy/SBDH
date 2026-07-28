@@ -1,11 +1,11 @@
 import ProductCard from "./ProductCard";
 import VoirPlus from "./VoirPlus";
 
-const ProductRow = ({ title, products, onAddToCart, withBorder=true}) => {
+const ProductRow = ({ title, products, withBorder = true, showVoirPlus = true }) => {
 
   return (
 
-    <div className={`${withBorder ? "border-2 border-black" : ""} flex flex-col gap-1 px-4 py-4 w-full shrink-`}>
+    <div className={`${withBorder ? "border-2 border-black" : ""} flex flex-col gap-1 px-4 py-4 w-full`}>
 
       <h2 className="titleText text-black">
         {title}
@@ -13,11 +13,10 @@ const ProductRow = ({ title, products, onAddToCart, withBorder=true}) => {
 
       <div className="flex gap-3 items-start overflow-x-auto py-3 scrollbar-hide">
         {products.map((p, i) => (
-          <ProductCard key={i} product={p} onAddToCart={onAddToCart}/>
+          <ProductCard key={i} product={p} />
         ))}
 
-        <VoirPlus />
-
+        {showVoirPlus && <VoirPlus />}
       </div>
       
     </div>
