@@ -26,6 +26,8 @@ import CatalogueEntreprise from './pages/CatalogueEntreprise.jsx';
 import AjoutProduit from './pages/AjoutProduit.jsx';
 import DashboardEntreprise from './pages/DashboardEntreprise.jsx';
 import AvisClients from './pages/AvisClients.jsx';
+import FicheProduit from './pages/FicheProduit.jsx';
+
 import { fetchAppData } from './store/slices/appDataSlice.js';
 
 function App() {
@@ -66,8 +68,8 @@ function App() {
       <Route path="/reinitialisation/email" element={<ReinitialisationEmail />}/>
       <Route path="/reinitialisation/mot-de-passe" element={<ReinitialisationMotDePasse />}/>
 
-      
-     
+      <Route path="/produit/:id" element={<FicheProduit />} />
+
       {/* Pages protégées clients */}
       <Route element={<ProtectedRoute allowedTypes={['client']}/>} >
         <Route path="/catalogue" element={<CatalogueClient />}/>
