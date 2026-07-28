@@ -1,11 +1,11 @@
 import ProductCard from "./ProductCard";
 import VoirPlus from "./VoirPlus";
 
-const ProductRow = ({ title, products, onAddToCart}) => {
+const ProductRow = ({ title, products, onAddToCart, withBorder=true}) => {
 
   return (
 
-    <div className="border-2 border-black flex flex-col gap-1 px-4 py-4 w-full shrink-0">
+    <div className={`${withBorder ? "border-2 border-black" : ""} flex flex-col gap-1 px-4 py-4 w-full shrink-`}>
 
       <h2 className="titleText text-black">
         {title}

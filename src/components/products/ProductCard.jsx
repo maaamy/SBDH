@@ -1,7 +1,7 @@
 import { Info } from "lucide-react";
 
 
-const ProductCard = ({product, onAddToCart}) => {
+const ProductCard = ({product, onAddToCart, purchase=true}) => {
   
   return (
 
@@ -20,9 +20,11 @@ const ProductCard = ({product, onAddToCart}) => {
         <Info size={20} />
       </div>
 
-      <button className="buttonText w-full h-10 bg-color-button text-white hover:bg-product-hover active:scale-95 transition-all" onClick={()=> onAddToCart(product)}>
+      { purchase &&
+        <button className="buttonText w-full h-10 bg-color-button text-white hover:bg-product-hover active:scale-95 transition-all" onClick={()=> onAddToCart(product)}>
         Ajouter au panier
-      </button>
+        </button>
+      }
       
     </div>
   );

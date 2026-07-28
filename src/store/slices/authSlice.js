@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "../../services/authService";
+import { fetchCustomer } from "./customerSlice";
 
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', 
@@ -15,9 +16,11 @@ export const verifyToken = createAsyncThunk('auth/verifyToken',
 
 export const inscriptionClient = createAsyncThunk(
   "auth/inscriptionClient",
-  async (formData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.inscriptionClient(formData);
+      dispatch(fetchCustomer(data.user_id));
+  
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -27,9 +30,10 @@ export const inscriptionClient = createAsyncThunk(
 
 export const connexionClient = createAsyncThunk(
   "auth/connexionClient",
-  async ({ email, mdp }, { rejectWithValue }) => {
+  async ({ email, mdp }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionClient({ email, mdp });
+      dispatch(fetchCustomer(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -39,9 +43,10 @@ export const connexionClient = createAsyncThunk(
 
 export const inscriptionEntreprise = createAsyncThunk(
   "auth/inscriptionEntreprise",
-  async (formData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.inscriptionEntreprise(formData);
+      //dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -51,9 +56,10 @@ export const inscriptionEntreprise = createAsyncThunk(
 
 export const connexionEntreprise = createAsyncThunk(
   "auth/connexionEntreprise",
-  async ({ email, siret, mdp }, { rejectWithValue }) => {
+  async ({ email, siret, mdp }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionEntreprise({ email, siret, mdp });
+      //dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -63,9 +69,10 @@ export const connexionEntreprise = createAsyncThunk(
 
 export const connexionClientGoogle = createAsyncThunk(
   "auth/connexionClientGoogle",
-  async ({ token }, { rejectWithValue }) => {
+  async ({ token }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionClientGoogle({ token });
+      dispatch(fetchCustomer(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -76,9 +83,10 @@ export const connexionClientGoogle = createAsyncThunk(
 
 export const connexionEntrepriseGoogle = createAsyncThunk(
   "auth/connexionEntrepriseGoogle",
-  async ({ token, siret }, { rejectWithValue }) => {
+  async ({ token, siret }, { rejectWithValue, dispatch }) => {
     try {
       const data = await authService.connexionEntrepriseGoogle({ token, siret });
+      //dispatch(fetchEnterprise(data.user_id));
       return data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
