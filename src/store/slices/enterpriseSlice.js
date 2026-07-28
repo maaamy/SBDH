@@ -88,6 +88,31 @@ export const fetchProductsWithAvis = createAsyncThunk(
     }
 );
 
+export const toggleProductActive = createAsyncThunk(
+    "enterprise/toggleProductActive",
+    async ({ productId, isActive }, { rejectWithValue }) => {
+        try {
+            const data = await enterpriseService.toggleProductActive(productId, isActive);
+            return { productId, isActive, product: data };
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
+export const addVariantToProduct = createAsyncThunk(
+    "enterprise/addVariantToProduct",
+    async ({ productId, variant, enterpriseId }, { rejectWithValue, dispatch }) => {
+        try {
+            await enterpriseService.addVariantToProduct(productId, variant);
+            const data = await enterpriseService.fetchProductsEnterprise(enterpriseId);
+            return data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.error || err.message);
+        }
+    }
+);
+
 const enterpriseSlice = createSlice({
     name:"enterprise",
     initialState: {
@@ -198,7 +223,42 @@ const enterpriseSlice = createSlice({
             .addCase(fetchProductsWithAvis.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
-            });
+            })
+            .addCase(toggleProductActive.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.products = state.products.map((p) =>
+                    p.id === payload.productId
+                        ? {
+                            ...p,
+                            est_actif: payload.isActive,
+                            Variante_produit: p.Variante_produit.map((v) => ({
+                                ...v,
+                                est_active: payload.isActive,
+                            }))
+                        }
+                        : p
+                );
+            })
+            .addCase(toggleProductActive.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(toggleProductActive.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(addVariantToProduct.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.products = payload.products;
+            })
+            .addCase(addVariantToProduct.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload;
+            })
+            .addCase(addVariantToProduct.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
     }
 });
 

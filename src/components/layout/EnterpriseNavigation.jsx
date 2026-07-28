@@ -7,14 +7,13 @@ const EnterpriseNavigation = ({ enterprise }) => {
 
   const ENTERPRISE_NAV_ITEMS = [
     { label: "Accueil", path: "/", icon: <Home size={20} /> },
-    { label: "Boutique", path: "/boutique" },
     { label: "Catalogue", path: "/catalogue-entreprise" },
   ];
 
   return (
     <Navigation navList={ENTERPRISE_NAV_ITEMS} >
         <button
-            onClick={() => navigate("/profil")}
+            onClick={() => navigate("/profil-entreprise")}
             className="flex-1 flex items-center justify-center gap-2 text-white titleText"
         >
           <User size={28} />

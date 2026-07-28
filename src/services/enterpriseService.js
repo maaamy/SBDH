@@ -83,3 +83,13 @@ export const fetchReviews = async (productId) => {
     const res = await api.get(`${API_ENTERPRISE_URL}/reviews/${productId}`);
     return res.data.reviews;
 };
+
+export const toggleProductActive = async (productId, isActive) => {
+    const res = await api.put(`${API_ENTERPRISE_URL}/product/${productId}/toggle`, { isActive });
+    return res.data.product;
+};
+
+export const addVariantToProduct = async (productId, variant) => {
+    const res = await api.post(`${API_ENTERPRISE_URL}/product/${productId}/variant`, variant);
+    return res.data.variant;
+};

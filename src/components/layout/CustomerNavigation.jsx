@@ -6,7 +6,7 @@ import { selectCustomer } from "../../store/slices/customerSlice";
 
 const CUSTOMER_NAV_LIST = [
   { label: "Accueil", path: "/", icon: <Home size={28} /> },
-  { label: "Catégories", path: "#" },
+  { label: "Catalogue", path: "/catalogue" },
   { label: "Offres", path: "#" },
 ];
 

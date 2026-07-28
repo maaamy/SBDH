@@ -1,19 +1,27 @@
-const Footer = () => {
+import { useNavigate } from "react-router-dom";
 
-    const FOOTER_LIST = ["A propos", "Contact", "Carrière"];
+const Footer = () => {
+    const navigate = useNavigate();
+
+    const FOOTER_LIST = [
+        { label: "A propos", path: "/apropos" },
+        { label: "Contact", path: "/contact" },
+        { label: "Carrière", path: "#" },
+    ];
+
     return (
       <footer
         className="w-full h-16 rounded-full flex bg-menu-gradient items-center px-12 gap-6"
       >
 
         {FOOTER_LIST.map((item) => (
-          <a
-            key={item}
-            href="#"
-            className="flex-1 text-center text-white titleText hover:opacity-80 transition-opacity whitespace-nowrap"
-          >
-            {item}
-          </a>
+            <button
+                key={item.label}
+                onClick={() => navigate(item.path)}
+                className="flex-1 text-center text-white titleText hover:opacity-80 transition-opacity whitespace-nowrap"
+            >
+                {item.label}
+            </button>
         ))}
       </footer>
     );

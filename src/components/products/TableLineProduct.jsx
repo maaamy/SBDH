@@ -38,23 +38,24 @@ const TableLineProduct = ({ variantProduct, onChange, onDelete }) => {
     };
 
     return (
-        <div className="bg-bg grid grid-cols-[1fr_3.5fr_1.25fr_1.1fr_1fr_1fr_3fr] gap-3 items-center p-3 rounded-xl shadow-sm">
+        <div className="bg-bg grid grid-cols-[2rem_1fr_3.5fr_1.25fr_1.1fr_1fr_1fr_3fr] gap-3 items-center p-3 border-t border-beige">
+
+            <div />
 
             <div className="flex justify-center">
                 <img
-                    src={variantProduct.image.length !== 0 ? variantProduct.image : Casque}
+                    src={variantProduct.image?.[0]?.url ?? Casque}
                     alt={variantProduct.nom}
-                    className="w-24 h-24 object-cover rounded-xl"
+                    className="w-14 h-14 object-cover rounded-xl"
                 />
             </div>
 
             <div className="flex flex-col gap-1">
-                <p className="secondaryTitleText text-product leading-tight">{variantProduct.nom}</p>
-                <p className="normalText leading-tight">{variantProduct.sku}</p>
+                <p className="normalText text-grey leading-tight">{variantProduct.sku}</p>
                 {variantProduct.Variante_valeur_attribut.map((att) => (
                     <div key={att.Valeur_attribut.id}>
-                        <span className="text-secondartyTitleText text-color-button font-bold">{att.Valeur_attribut.Attribut.nom}: </span>
-                        <span className="text-secondartyTitleText">{att.Valeur_attribut.nom}</span>
+                        <span className="normalText text-color-button font-bold">{att.Valeur_attribut.Attribut.nom}: </span>
+                        <span className="normalText">{att.Valeur_attribut.nom}</span>
                     </div>
                 ))}
             </div>
@@ -100,14 +101,14 @@ const TableLineProduct = ({ variantProduct, onChange, onDelete }) => {
                     <>
                         <button
                             onClick={handleSave}
-                            className="buttonText h-14 px-4 bg-green-500 text-white rounded-xl hover:bg-green-600 active:scale-95 transition-all flex items-center gap-2"
+                            className="buttonText h-12 px-3 bg-green-500 text-white rounded-xl hover:bg-green-600 active:scale-95 transition-all flex items-center gap-1"
                         >
                             <Check size={16} />
                             Sauvegarder
                         </button>
                         <button
                             onClick={handleCancel}
-                            className="buttonText h-14 px-4 bg-beige text-black rounded-xl hover:bg-bg-hover active:scale-95 transition-all flex items-center gap-2"
+                            className="buttonText h-12 px-3 bg-beige text-black rounded-xl hover:bg-bg-hover active:scale-95 transition-all flex items-center gap-1"
                         >
                             <X size={16} />
                             Annuler
@@ -117,14 +118,14 @@ const TableLineProduct = ({ variantProduct, onChange, onDelete }) => {
                     <>
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="buttonText h-14 px-4 bg-color-button text-white rounded-xl hover:bg-button-hover active:scale-95 transition-all flex items-center gap-2"
+                            className="buttonText h-12 px-3 bg-color-button text-white rounded-xl hover:bg-button-hover active:scale-95 transition-all flex items-center gap-1"
                         >
                             <Pencil size={16} />
                             Modifier
                         </button>
                         <button
                             onClick={() => onDelete(variantProduct.id)}
-                            className="buttonText h-14 px-4 bg-color-button text-white rounded-xl hover:bg-red-500 active:scale-95 transition-all flex items-center gap-2"
+                            className="buttonText h-12 px-3 bg-color-button text-white rounded-xl hover:bg-red-500 active:scale-95 transition-all flex items-center gap-1"
                         >
                             <Trash2 size={16} />
                             Supprimer
