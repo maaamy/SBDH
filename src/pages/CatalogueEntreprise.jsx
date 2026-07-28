@@ -35,7 +35,7 @@ const CatalogueEntreprise = () => {
         if (profile?.id) {
             dispatch(fetchProductsEnterprise(profile.id));
         }
-    }, []);
+    }, [profile?.id]);
 
     const toggleProduct = (productId) => {
         setExpandedProducts((prev) => ({ ...prev, [productId]: !prev[productId] }));
