@@ -6,7 +6,7 @@ import ProductRow from "../components/products/ProductRow";
 import Footer from "../components/layout/Footer";
 import { Home } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 
 const NAV_LIST = [
@@ -21,12 +21,15 @@ const PageAccueil = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { categories, loading } = useSelector((state) => state.appData);
 
+  
   const handleDeconnexion = () => {
       dispatch(logout());
       navigate("/connexion");
   }
-
+  
+  if(loading) return ( <div>Chargement...</div>);
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
       <Banner />
@@ -36,7 +39,7 @@ const PageAccueil = () => {
 
       <main className="flex items-start gap-0 p-4 w-full flex-1">
 
-        <Sidebar companyList={ENTREPRISES} categoryList={CATEGORIES}/>
+        <Sidebar companyList={ENTREPRISES} categoryList={categories}/>
 
         <section className="flex-1 flex flex-col gap-2 px-3 overflow-hidden min-w-0">
           {SECTIONS.map((title) => (

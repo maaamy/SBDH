@@ -14,6 +14,8 @@ const CatalogueClient = () => {
   const customer = useSelector(selectUser);
   const dispatch = useDispatch();
   
+  const { categories } = useSelector((state) => state.appData);
+
   const [cart, setCart] = useState([]);
 
   const handleAddToCart = (product) => {
@@ -43,7 +45,7 @@ const CatalogueClient = () => {
 
       <main className="flex items-start gap-0 p-4 w-full flex-1">
 
-        <Sidebar companyList={ENTREPRISES} categoryList={CATEGORIES}/>
+        <Sidebar companyList={ENTREPRISES} categoryList={categories}/>
 
         <section className="flex-1 flex flex-col gap-2 px-3 overflow-hidden min-w-0">
           <h1 className="titleText text-color-button">Produits</h1>

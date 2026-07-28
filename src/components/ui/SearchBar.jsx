@@ -1,18 +1,14 @@
-import { useState } from "react";
 import { Search } from "lucide-react";
 
-const SearchBar = ()  => {
-
-  const [query, setQuery] = useState("");
-
+const SearchBar = ({ value, onChange }) => {
   return (
 
     <div className="relative max-w-96 shrink-0">
 
       <input
         type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        value={value}
+        onChange={onChange}
         placeholder="Rechercher"
         className="w-full h-14 bg-light pl-3 pr-10 secondaryText placeholder:text-grey focus:outline-none"
       />

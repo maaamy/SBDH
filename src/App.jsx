@@ -17,9 +17,16 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { verifyToken } from './store/slices/authSlice.js';
 import { fetchCustomer } from './store/slices/customerSlice.js';
+import { fetchEnterprise } from './store/slices/enterpriseSlice.js';
 import ProfilClient from './pages/ProfilClient.jsx';
 import DashboardClient from './pages/DashboardClient.jsx';
 import HistoriqueCommandes from './pages/HistoriqueCommandes.jsx';
+import ProfilEntreprise from './pages/ProfilEntreprise.jsx';
+import CatalogueEntreprise from './pages/CatalogueEntreprise.jsx';
+import AjoutProduit from './pages/AjoutProduit.jsx';
+import DashboardEntreprise from './pages/DashboardEntreprise.jsx';
+import AvisClients from './pages/AvisClients.jsx';
+import { fetchAppData } from './store/slices/appDataSlice.js';
 
 function App() {
 
@@ -29,16 +36,16 @@ function App() {
 
   useEffect(() => {
     dispatch(verifyToken()).then((result) => {
-    const user = result.payload;
-    if (user?.type === "client") {
-      dispatch(fetchCustomer(user.user_id)).finally(() => setLoading(false));
-    } else if (user?.type === "entreprise") {
-      //dispatch(fetchEntreprise(user.id));
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  });
+      const user = result.payload;
+      if (user?.type === "client") {
+        dispatch(fetchCustomer(user.user_id)).finally(() => setLoading(false));
+      } else if (user?.type === "entreprise") {
+        dispatch(fetchEnterprise(user.user_id)).finally(() =>  setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+    dispatch(fetchAppData());
   }, []);
 
   if(loading) return  <div>Chargement...</div>;
@@ -69,6 +76,16 @@ function App() {
         <Route path="/profil" element={<ProfilClient />}/>
         <Route path="/tableau-de-bord" element={<DashboardClient />}/>
         <Route path="/commandes" element={<HistoriqueCommandes />}/>    
+
+      </Route>
+
+      {/* Pages protégées entreprises */}
+      <Route element={<ProtectedRoute allowedTypes={['entreprise']}/>} >
+        <Route path="/profil-entreprise" element={<ProfilEntreprise/>}/>
+        <Route path="/ajout-produit" element={<AjoutProduit />}/>
+        <Route path="/catalogue-entreprise" element={<CatalogueEntreprise />}/>
+        <Route path="/tableau-de-bord-entreprise" element={<DashboardEntreprise />}/>
+        <Route path="/avis-clients" element={<AvisClients />} />
 
       </Route>
 

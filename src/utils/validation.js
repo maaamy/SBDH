@@ -101,3 +101,33 @@ export const validationInscriptionEntrepriseForm = (form) => {
 
     return null;
 };
+
+export const validationProductAddForm = (form,variants, attributes) => {
+  
+  if (!form.nom.trim())
+    return "Veuillez renseigner le nom du produit.";
+
+  if (!form.description.trim())
+    return "Une description du produit est nécessaire.";
+
+  if (!form.categorie)
+    return "Veuillez sélectionner une catégorie.";
+
+  if (!form.sousCategorie)
+    return "Veuillez sélectionner une sous-catégorie.";
+
+  if (variants.length===0)
+    return "Veuillez ajouter au moins une variante.";
+
+  if( variants.length !==0) {
+    const hasError = variants.some(v => {
+      const emptyAttributes = attributes.some(attr => !v[attr.nom]);
+      return !v.prix || !v.stock || !v.sku || emptyAttributes;
+    });
+    if (hasError) {
+      return "Veuillez remplir tous les champs des variantes.";
+    }
+  }
+  
+  return null;
+};
