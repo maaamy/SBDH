@@ -1,64 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../components/layout/Footer";
 import CartItem from "../components/layout/CartItem";
 import CartSummary from "../components/layout/CartSummary";
-import { PRODUCTS } from "../data/PanierProduit";
 import Banner from "../components/layout/Banner";
 import CartSidebar from "../components/layout/CartSidebar";
 import CustomerNavigation from "../components/layout/CustomerNavigation";
-import { selectUser } from "../store/slices/authSlice";
-import { useSelector } from "react-redux";
-
-const PANIER_MOCK = [
-  { id: 1, quantite: 1 },
-  { id: 2, quantite: 1 },
-  { id: 3, quantite: 1 },
-  { id: 4, quantite: 1 },
-  { id: 5, quantite: 1 },
-];
+import { selectCustomer, setCartCount } from "../store/slices/customerSlice";
+import * as customerService from "../services/customerService";
+import Casque from "../assets/Casque.jpg";
 
 const Panier = ( { showButton=true, children } ) => {
-  const customer = useSelector(selectUser);
-  const [items, setItems] = useState(
-    PANIER_MOCK.map((item) => {
-      const produit = PRODUCTS.find((p) => p.id === item.id);
-      return produit ? { ...produit, quantite: item.quantite } : null;
-    }).filter(Boolean)
-  );
+  const dispatch = useDispatch();
+  const { profil } = useSelector(selectCustomer);
+  const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleUpdate = (id, qty) => {
-    if (qty <= 0) {
-      handleRemove(id);
+  const handleUpdate = async (cartItemId, quantity) => {
+    if (quantity <= 0) {
+      handleRemove(cartItemId);
       return;
     }
-
-    setItems((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, quantite: qty } : p
-      )
+    await customerService.updateCartItem(cartItemId, quantity);
+    setCartItems((prev) =>
+      prev.map((c) => c.cartItemId === cartItemId ? { ...c, quantity } : c)
     );
+    dispatch(setCartCount(cartItems.reduce((acc, c) =>
+      acc + (c.cartItemId === cartItemId ? quantity : c.quantity), 0)
+    ));
   };
 
-  const handleRemove = (id) => {
-    setItems((prev) => prev.filter((p) => p.id !== id));
+  useEffect(() => {
+    if (profil?.clientId) {
+      customerService.fetchCart(profil.clientId)
+        .then((cart) => {
+          const items = cart.map((c) => ({
+            cartItemId: c.id,
+            variantId: c.Variante_produit.id,
+            nom: c.Variante_produit.Produit.nom,
+            image: c.Variante_produit.Produit.Image_produit?.[0]?.url ?? Casque,
+            prix: c.Variante_produit.prix,
+            quantity: c.quantite,
+            attributes: c.Variante_produit.Variante_valeur_attribut,
+          }));
+          setCartItems(items);
+          dispatch(setCartCount(items.reduce((acc, c) => acc + c.quantity, 0)));
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [profil]);
+
+  const handleRemove = async (cartItemId) => {
+    await customerService.removeCartItem(cartItemId);
+    const updated = cartItems.filter((c) => c.cartItemId !== cartItemId);
+    setCartItems(updated);
+    dispatch(setCartCount(updated.reduce((acc, c) => acc + c.quantity, 0)));
   };
 
-  const total = items.reduce(
-    (acc, p) => acc + p.prix * p.quantite,
-    0
-  );
+  const total = cartItems.reduce((acc, c) => acc + c.prix * c.quantity, 0);
 
-  const cartCount = items.reduce(
-    (acc, p) => acc + p.quantite,
-    0
-  );
+  if (isLoading) return <div>Chargement...</div>;
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-backgroundImg bg-cover">
 
       <Banner />
 
-      <CustomerNavigation cartCount={cartCount} customer={customer} />
+      <CustomerNavigation customer={profil} />
 
       <main className="flex items-start gap-0 p-4 w-full flex-1">
 
@@ -66,17 +74,20 @@ const Panier = ( { showButton=true, children } ) => {
 
         <section className="flex-1 flex flex-col gap-2 px-3 overflow-hidden min-w-0">
            <h1 className="titleText text-color-button">Panier</h1>
-           <h1 className="text-button text-black font-bold">
-              Il y a {items.length} article(s) dans votre panier
-            </h1>
-            {items.map((item) => (
+           <p className="text-button text-black font-bold">
+              Il y a {cartItems.length} article(s) dans votre panier
+           </p>
+            {cartItems.length === 0 ? (
+              <p className="normalText text-grey text-center py-16">Votre panier est vide.</p>
+              ) : (
+              cartItems.map((item) => (
                 <CartItem
-                    key={item.id}
+                    key={item.cartItemId}
                     item={item}
-                    onUpdate={handleUpdate}
-                    onRemove={handleRemove}
+                    onUpdate={(_, qty) => handleUpdate(item.cartItemId, qty)}
+                    onRemove={() => handleRemove(item.cartItemId)}
                 />
-            ))}
+            )))}
         </section>
 
         <div className="flex flex-col gap-6 w-80 ml-auto">

@@ -2,7 +2,7 @@ import { Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Casque from "../../assets/Casque.jpg";
 
-const ProductCard = ({product, onAddToCart, purchase=true}) => {
+const ProductCard = ({product, purchase=true}) => {
   const navigate = useNavigate();
   const image = product.Image_produit?.[0]?.url ?? Casque;
   const prixMin = product.Variante_produit?.length
@@ -29,7 +29,7 @@ const ProductCard = ({product, onAddToCart, purchase=true}) => {
       { purchase && (
         <button
           className="buttonText w-full h-10 bg-color-button text-white hover:bg-button-hover active:scale-95 transition-all"
-          onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+          onClick={(e) => { e.stopPropagation(); navigate(`/produit/${product.id}`); }}
         >
           Ajouter au panier
         </button>

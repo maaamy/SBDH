@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart, User, Home } from "lucide-react";
 import Navigation from "./Navigation";
+import { useSelector } from "react-redux";
+import { selectCustomer } from "../../store/slices/customerSlice";
 
 const CUSTOMER_NAV_LIST = [
   { label: "Accueil", path: "/", icon: <Home size={28} /> },
@@ -8,8 +10,9 @@ const CUSTOMER_NAV_LIST = [
   { label: "Offres", path: "#" },
 ];
 
-const CustomerNavigation = ({ cartCount = 0 , customer }) => {
+const CustomerNavigation = ({ customer }) => {
   const navigate = useNavigate();
+  const { cartCount } = useSelector(selectCustomer);
 
   return (
     <Navigation navList={CUSTOMER_NAV_LIST} >

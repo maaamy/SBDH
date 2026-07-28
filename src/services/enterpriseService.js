@@ -50,3 +50,36 @@ export const fetchProductsWithAvis = async (enterpriseId) => {
     return res.data.products;
 };
 
+export const fetchOrders = async (enterpriseId) => {
+    const res = await api.get(`${API_ENTERPRISE_URL}/orders/${enterpriseId}`);
+    return res.data.orders;
+};
+
+export const confirmOrder = async (orderId) => {
+    const res = await api.put(`${API_ENTERPRISE_URL}/orders/${orderId}/confirm`);
+    return res.data.order;
+};
+
+export const updateOrderStatus = async (orderId, statut) => {
+    const res = await api.put(`${API_ENTERPRISE_URL}/orders/${orderId}/status`, { statut });
+    return res.data.order;
+};
+
+export const cancelOrder = async (orderId) => {
+    const res = await api.put(`${API_ENTERPRISE_URL}/orders/${orderId}/cancel`);
+    return res.data.order;
+};
+
+export const fetchNotifications = async (userId) => {
+    const res = await api.get(`${API_ENTERPRISE_URL}/${userId}/notifications`);
+    return res.data.notifications;
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+    await api.put(`${API_ENTERPRISE_URL}/notifications/${notificationId}/read`);
+};
+
+export const fetchReviews = async (productId) => {
+    const res = await api.get(`${API_ENTERPRISE_URL}/reviews/${productId}`);
+    return res.data.reviews;
+};

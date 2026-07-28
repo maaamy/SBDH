@@ -16,8 +16,8 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { verifyToken } from './store/slices/authSlice.js';
-import { fetchCustomer } from './store/slices/customerSlice.js';
-import { fetchEnterprise } from './store/slices/enterpriseSlice.js';
+import { fetchCustomer, setCartCount, setNotifCount } from './store/slices/customerSlice.js';
+import { fetchEnterprise, setNotifCount as setEnterpriseNotifCount } from './store/slices/enterpriseSlice.js';
 import ProfilClient from './pages/ProfilClient.jsx';
 import DashboardClient from './pages/DashboardClient.jsx';
 import HistoriqueCommandes from './pages/HistoriqueCommandes.jsx';
@@ -27,8 +27,12 @@ import AjoutProduit from './pages/AjoutProduit.jsx';
 import DashboardEntreprise from './pages/DashboardEntreprise.jsx';
 import AvisClients from './pages/AvisClients.jsx';
 import FicheProduit from './pages/FicheProduit.jsx';
-
+import CommandesEntreprise from './pages/CommandesEntreprise.jsx';
+import NotificationsClient from './pages/NotificationsClient.jsx';
+import NotificationsEntreprise from './pages/NotificationsEntreprise.jsx';
 import { fetchAppData } from './store/slices/appDataSlice.js';
+import * as customerService from './services/customerService.js';
+import * as enterpriseService from './services/enterpriseService.js';
 
 function App() {
 
@@ -40,9 +44,29 @@ function App() {
     dispatch(verifyToken()).then((result) => {
       const user = result.payload;
       if (user?.type === "client") {
-        dispatch(fetchCustomer(user.user_id)).finally(() => setLoading(false));
+        dispatch(fetchCustomer(user.user_id)).then((res) => {
+          const clientId = res.payload?.id;
+          const loginId = res.payload?.login_id;
+          if (clientId) {
+            customerService.fetchCart(clientId).then((cart) => {
+              dispatch(setCartCount(cart.reduce((acc, c) => acc + c.quantite, 0)));
+            }).catch(() => {});
+          }
+          if (loginId) {
+            customerService.fetchNotifications(loginId).then((notifs) => {
+                dispatch(setNotifCount(notifs.filter(n => !n.lu).length));
+            }).catch(() => {});
+          }
+        }).finally(() => setLoading(false));
       } else if (user?.type === "entreprise") {
-        dispatch(fetchEnterprise(user.user_id)).finally(() =>  setLoading(false));
+        dispatch(fetchEnterprise(user.user_id)).then((res) => {
+          const loginId = res.payload?.login_id;
+            if (loginId) {
+                enterpriseService.fetchNotifications(loginId).then((notifs) => {
+                    dispatch(setEnterpriseNotifCount(notifs.filter(n => !n.lu).length));
+                }).catch(() => {});
+            }
+        }).finally(() => setLoading(false));
       } else {
         setLoading(false);
       }
@@ -78,7 +102,7 @@ function App() {
         <Route path="/profil" element={<ProfilClient />}/>
         <Route path="/tableau-de-bord" element={<DashboardClient />}/>
         <Route path="/commandes" element={<HistoriqueCommandes />}/>    
-
+        <Route path="/notifications" element={<NotificationsClient />}/>
       </Route>
 
       {/* Pages protégées entreprises */}
@@ -88,10 +112,11 @@ function App() {
         <Route path="/catalogue-entreprise" element={<CatalogueEntreprise />}/>
         <Route path="/tableau-de-bord-entreprise" element={<DashboardEntreprise />}/>
         <Route path="/avis-clients" element={<AvisClients />} />
-
+        <Route path="/commandes-entreprise" element={<CommandesEntreprise />} />
+        <Route path="/notifications-entreprise" element={<NotificationsEntreprise />} />
       </Route>
 
     </Routes>
-  )
+  );
 }
 export default App;

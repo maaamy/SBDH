@@ -1,19 +1,21 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User, LayoutDashboard, ShoppingBag, Bell, LogOut } from "lucide-react";
 import { logout } from "../../store/slices/authSlice";
+import { selectCustomer } from "../../store/slices/customerSlice";
 
 const MENU_ITEMS = [
   { label: "Mon profil", path: "/profil", icon: <User size={22} /> },
   { label: "Tableau de bord", path: "/tableau-de-bord", icon: <LayoutDashboard size={22} /> },
   { label: "Mes commandes", path: "/commandes", icon: <ShoppingBag size={22} /> },
-  { label: "Mes notifications", path: "/notifications", icon: <Bell size={22} /> },
+  { label: "Mes notifications", path: "/notifications", icon: <Bell size={22} />, showCount: true },
 ];
 
 const CustomerProfileMenu = ( { customer } ) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { notifCount } = useSelector(selectCustomer);
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -54,7 +56,12 @@ const CustomerProfileMenu = ( { customer } ) => {
                 }`}
             >
               <span className="shrink-0">{item.icon}</span>
-              <span className="secondaryTitleText">{item.label}</span>
+              <span className="secondaryTitleText flex-1 text-left">{item.label}</span>
+              {item.showCount && notifCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shrink-0">
+                  {notifCount > 99 ? "99+" : notifCount}
+                </span>
+              )}
             </button>
           ))}
 
